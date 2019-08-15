@@ -1,3 +1,17 @@
+/* Estilos utilizados nos cadastros da biblioteca. */
+
+.cadastro-botoes {
+    margin-top: 1rem;
+}
+
+.grade-col-alterar {
+    max-width: 30px !important;
+}
+
+    .grade-col-alterar a {
+        float: right;
+    }
+
 /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
@@ -62,4 +76,12 @@ body {
 
 .hidden {
     display: none !important;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.no-padding {
+    padding: 0 !important;
 }

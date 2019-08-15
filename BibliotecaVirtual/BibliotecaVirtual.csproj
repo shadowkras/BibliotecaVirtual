@@ -23,7 +23,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\BibliotecaVirtual.Service\BibliotecaVirtual.Service.csproj" />
+    <ProjectReference Include="..\BibliotecaVirtual.Service\BibliotecaVirtual.Application.csproj" />
   </ItemGroup>
 
 </Project>

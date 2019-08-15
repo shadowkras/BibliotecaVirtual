@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using BibliotecaVirtual.Service.ViewModels;
+using BibliotecaVirtual.Application.ViewModels;
 
 namespace BibliotecaVirtual.Controllers
 {

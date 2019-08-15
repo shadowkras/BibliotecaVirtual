@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Localization;
 using BibliotecaVirtual.Data;
+using BibliotecaVirtual.Application.Services;
+using BibliotecaVirtual.Data.Repositories;
 
 namespace BibliotecaVirtual
 {
@@ -29,7 +31,7 @@ namespace BibliotecaVirtual
             services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Fastest);
             services.AddResponseCompression(options =>
             {
-                options.EnableForHttps = true;
+                //options.EnableForHttps = true;
                 options.MimeTypes = new[]
                 {
                     // Default
@@ -103,6 +105,13 @@ namespace BibliotecaVirtual
             #region Mvc
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            #endregion
+
+            #region Services
+
+            services.AddTransient<IAuthorService, AuthorService>();
+            services.AddTransient<IAuthorRepository, AuthorRepository>();
 
             #endregion
         }

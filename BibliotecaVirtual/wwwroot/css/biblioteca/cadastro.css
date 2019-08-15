@@ -1,0 +1,13 @@
+﻿/* Estilos utilizados nos cadastros da biblioteca. */
+
+.cadastro-botoes {
+    margin-top: 1rem;
+}
+
+.grade-col-alterar {
+    max-width: 30px !important;
+}
+
+    .grade-col-alterar a {
+        float: right;
+    }
