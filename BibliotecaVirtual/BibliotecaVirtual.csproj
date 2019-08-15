@@ -6,6 +6,10 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\bundles\biblioteca.css" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -14,12 +18,12 @@
 
 
   <ItemGroup>
-    <Folder Include="NewFolder\" />
+    <None Include="Areas\Identity\Pages\_ViewStart.cshtml" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <None Include="Areas\Identity\Pages\_ViewStart.cshtml" />
+    <ProjectReference Include="..\BibliotecaVirtual.Service\BibliotecaVirtual.Service.csproj" />
   </ItemGroup>
 
 </Project>

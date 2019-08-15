@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BibliotecaVirtual.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Localization;
+using BibliotecaVirtual.Data;
 
 namespace BibliotecaVirtual
 {
@@ -28,6 +26,28 @@ namespace BibliotecaVirtual
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Fastest);
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+                options.MimeTypes = new[]
+                {
+                    // Default
+                    "text/plain",
+                    "text/css",
+                    "application/javascript",
+                    "text/html",
+                    "application/xml",
+                    "text/xml",
+                    "application/json",
+                    "text/json",
+                    "image/png",
+                    "image/x-icon",
+                    "application/font-woff",
+                    "font/woff2",
+                };
+            });
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -36,18 +56,69 @@ namespace BibliotecaVirtual
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+            #region Default Identity, UI, Framework
+
             services.AddDefaultIdentity<IdentityUser>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                    .AddDefaultUI(UIFramework.Bootstrap4)
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            #endregion
+
+            #region Cultura
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                #region Default Culture
+
+                options.DefaultRequestCulture = new RequestCulture(culture: "pt-BR", uiCulture: "pt-BR");
+
+                #endregion
+            });
+
+            #endregion
+
+            #region Response Cache
+
+            services.AddResponseCaching(options =>
+            {
+                options.UseCaseSensitivePaths = false;
+            });
+
+            #endregion
+
+            #region Cookie Policy
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            #endregion
+
+            #region Mvc
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+                              ApplicationDbContext dbContext)
         {
+            #region Compressão
+
+            app.UseResponseCompression();
+
+            #endregion
+
+            #region Erros
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -56,22 +127,71 @@ namespace BibliotecaVirtual
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            #endregion
+
+            #region Https
+
+            //app.UseHttpsRedirection(); 
+
+            #endregion
+
+            #region Static Files
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = context =>
+                {
+                    // Manter cache estático por 1 ano, arquivos versionados são atualizados automaticamente.
+                    if (!string.IsNullOrEmpty(context.Context.Request.Query["v"]))
+                    {
+                        context.Context.Response.Headers.Add("cache-control", new[] { "public,max-age=31536000,immutable,vary-by-header=host;version" });
+                        context.Context.Response.Headers.Add("Expires", new[] { DateTime.UtcNow.AddYears(1).ToString("R") });
+                    }
+                },
+            });
+
+            #endregion
+
+            #region Response Cache
+
+            app.UseResponseCaching();
+
+            #endregion
+
+            #region Cookies
+
             app.UseCookiePolicy();
 
+            #endregion
+
+            #region Autenticação
+
             app.UseAuthentication();
+
+            #endregion
+
+            #region Rotas
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(name: "areaRoute",
+                        template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             });
+
+            #endregion
+
+            #region Migrations
+
+            dbContext.Database.Migrate();
+
+            #endregion
         }
     }
 }

@@ -9,4 +9,8 @@
     <Folder Include="ViewModels\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BibliotecaVirtual.Data\BibliotecaVirtual.Data.csproj" />
+  </ItemGroup>
+
 </Project>
