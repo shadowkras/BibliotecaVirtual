@@ -1,57 +1,19 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using BibliotecaVirtual.Data.Extensions;
 
 namespace BibliotecaVirtual.Data.Repositories
 {
-    /// <summary>
-    /// Classe com os métodos padrões dos repositórios.
-    /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    public class BaseRepository<TEntity> : IDisposable where TEntity : class
+    public interface IBaseRepository<TEntity> : IDisposable where TEntity : class
     {
-        protected readonly ApplicationDbContext _dbContext;
-        public DbSet<TEntity> DbSet;
-
-        #region Construtor
-
-        /// <summary>
-        /// Generic construtor based on a specific DbContext.
-        /// </summary>
-        /// <param name="dbContext"></param>
-        public BaseRepository(ApplicationDbContext dbContext)
-        {
-            _dbContext = dbContext ?? throw new ArgumentNullException("dbContext");
-            SetTrackingBehavior();
-
-            try
-            {
-                DbSet = dbContext.Set<TEntity>();
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new Exception(string.Format($"Não foi possível mapear a entidade: {this.GetType().Name}"), ex);
-            }
-        }
-
-        #endregion
-
-        #region Insert
-
         /// <summary>
         /// Insert a new entity to our repository.
         /// <para>Examples:</para>
         /// <para>_repository.Insert(newEntity);</para>
         /// </summary>
         /// <param name="entity">Entity instance to be saved to our repository.</param>
-        public virtual void Insert(TEntity entity)
-        {
-            DbSet.Add(entity);
-        }
+        void Insert(TEntity entity);
 
         /// <summary>
         /// Method to insert a list of entities to our repository.
@@ -59,14 +21,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// <para>_repository.Insert(entityList);</para>
         /// </summary>
         /// <param name="entities">List of entities to be saved to our repository.</param>
-        public virtual void Insert(IEnumerable<TEntity> entities)
-        {
-            DbSet.AddRange(entities);
-        }
-
-        #endregion
-
-        #region Update
+        void Insert(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// Method to update a single entity.
@@ -74,10 +29,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// <para>_repository.Update(entity);</para>
         /// </summary>
         /// <param name="entity">Entity instance to be saved to our repository.</param>
-        public virtual void Update(TEntity entity)
-        {
-            DbSet.Update(entity);
-        }
+        void Update(TEntity entity);
 
         /// <summary>
         /// Method to update our repository using a list of entities.
@@ -85,10 +37,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// <para>_repository.Update(entityList);</para>
         /// </summary>
         /// <param name="entities">List of entities to be saved to our repository.</param>
-        public virtual void Update(IEnumerable<TEntity> entities)
-        {
-            DbSet.UpdateRange(entities);
-        }
+        void Update(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// Method to update specific properties of an entity.
@@ -98,19 +47,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// </summary>
         /// <param name="entity">Entity instance to be saved to our repository.</param>
         /// <param name="propriedades">Array of expressions with the properties that will be changed.</param>
-        public void Update(TEntity entity, params Expression<Func<TEntity, object>>[] propriedades)
-        {
-            _dbContext.Attach(entity);
-
-            foreach (var item in propriedades.AsParallel())
-            {
-                _dbContext.Entry(entity).Property(item).IsModified = true;
-            }
-        }
-
-        #endregion
-
-        #region Delete
+        void Update(TEntity entity, params Expression<Func<TEntity, object>>[] propriedades);
 
         /// <summary>
         /// Delete an entity from our repository.
@@ -118,10 +55,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// <para>_repository.Delete(entity);</para>
         /// </summary>
         /// <param name="entity">Entity instance to be deleted to our repository.</param>
-        public virtual void Delete(TEntity entity)
-        {
-            DbSet.Remove(entity);
-        }
+        void Delete(TEntity entity);
 
         /// <summary>
         /// Delete an entity from our repository.
@@ -129,10 +63,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// <para>_repository.Delete(entityList);</para>
         /// </summary>
         /// <param name="entities">List of entities to be deleted to our repository.</param>
-        public virtual void Delete(IEnumerable<TEntity> entities)
-        {
-            DbSet.RemoveRange(entities);
-        }
+        void Delete(IEnumerable<TEntity> entities);
 
         /// <summary>
         /// Delete an entity from our repository.
@@ -140,17 +71,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// <para>_repository.Delete(p=> p.UserId == userId);</para>
         /// </summary>
         /// <param name="predicate">Filter applied to our search.</param>
-        public virtual void Delete(Expression<Func<TEntity, bool>> predicate)
-        {
-            DbSet.AsQueryable()
-                 .Where(predicate)
-                 .ToList()
-                 .ForEach(entity => DbSet.Remove(entity));
-        }
-
-        #endregion
-
-        #region Select
+        void Delete(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Select an entity using it's primary keys as search criteria.
@@ -160,11 +81,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// </summary>
         /// <param name="primaryKeys">Primary key properties of our entity.</param>
         /// <returns>Returns an entity from our repository.</returns>
-        public async Task<TEntity> SelectByKey(params object[] primaryKeys)
-        {
-            return await DbSet.FindAsync(primaryKeys)
-                              .Detach(_dbContext);
-        }
+        Task<TEntity> SelectByKey(params object[] primaryKeys);
 
         /// <summary>
         /// Select all entities from our repository
@@ -172,10 +89,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// <para>_repository.SelectAll();</para>
         /// </summary>
         /// <returns>Returns all entities from our repository.</returns>
-        public virtual async Task<IList<TEntity>> SelectAll()
-        {
-            return await DbSet.ToListAsync();
-        }
+        Task<IList<TEntity>> SelectAll();
 
         /// <summary>
         /// Select entities using pagination (take N).
@@ -186,12 +100,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// <param name="pageNumber">Page number.</param>
         /// <param name="quantity">Number of entities to select per page.</param>
         /// <returns>Returns entities from our repository.</returns>
-        public virtual async Task<IList<TEntity>> SelectAllByPage(int pageNumber, int quantity)
-        {
-            return await DbSet.Skip(Math.Max(pageNumber - 1, 0) * quantity)
-                              .Take(quantity)
-                              .ToListAsync();
-        }
+        Task<IList<TEntity>> SelectAllByPage(int pageNumber, int quantity);
 
         /// <summary>
         /// Select an entity from our repository using a filter.
@@ -201,11 +110,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// </summary>
         /// <param name="predicate">Filter applied to our search.</param>
         /// <returns>Returns an entity from our repository.</returns>
-        public virtual async Task<TEntity> Select(Expression<Func<TEntity, bool>> predicate)
-        {
-            return await DbSet.WhereNullSafe(predicate)
-                              .FirstOrDefaultAsync();
-        }
+        Task<TEntity> Select(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Select specific properties of an entity from our repository.
@@ -216,13 +121,8 @@ namespace BibliotecaVirtual.Data.Repositories
         /// <param name="predicate">Filter applied to our search.</param>
         /// <param name="properties">Fields that will be selected and populated in our result.</param>
         /// <returns>Returns an entity from our repository.</returns>
-        public async Task<TResult> Select<TResult>(Expression<Func<TEntity, bool>> predicate,
-                                       Expression<Func<TEntity, TResult>> properties)
-        {
-            return await DbSet.WhereNullSafe(predicate)
-                              .Select(properties)
-                              .FirstOrDefaultAsync();
-        }
+        Task<TResult> Select<TResult>(Expression<Func<TEntity, bool>> predicate,
+                                      Expression<Func<TEntity, TResult>> properties);
 
         /// <summary>
         /// Select a list of entities from our repository using a filter.
@@ -232,11 +132,7 @@ namespace BibliotecaVirtual.Data.Repositories
         /// </summary>
         /// <param name="predicate">Filter applied to our search.</param>
         /// <returns>Returns a list of entities from our repository.</returns>
-        public async Task<IList<TEntity>> SelectList(Expression<Func<TEntity, bool>> predicate)
-        {
-            return await DbSet.WhereNullSafe(predicate)
-                              .ToListAsync();
-        }
+        Task<IList<TEntity>> SelectList(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Select specific properties in list of entities from our repository using a filter.
@@ -248,13 +144,8 @@ namespace BibliotecaVirtual.Data.Repositories
         /// <param name="properties">Fields that will be selected and populated.</param>
         /// <param name="predicate">Filter applied to our search.</param>
         /// <returns>Returns a list of entities from our repository.</returns>
-        public async Task<IList<TResult>> SelectList<TResult>(Expression<Func<TEntity, bool>> predicate,
-                                                              Expression<Func<TEntity, TResult>> properties)
-        {
-            return await DbSet.WhereNullSafe(predicate)
-                              .Select(properties)
-                              .ToListAsync();
-        }
+        Task<IList<TResult>> SelectList<TResult>(Expression<Func<TEntity, bool>> predicate,
+                                                 Expression<Func<TEntity, TResult>> properties);
 
         /// <summary>
         /// Method to verify if there are any entries in our repository using a filter.
@@ -264,49 +155,6 @@ namespace BibliotecaVirtual.Data.Repositories
         /// </summary>
         /// <param name="predicate">Filter applied to our search.</param>
         /// <returns>Returns if any entity was found using the search criteria.</returns>
-        public virtual async Task<bool> Exists(Expression<Func<TEntity, bool>> predicate)
-        {
-            return await DbSet.AnyAsync(predicate);
-        }
-
-        #endregion
-
-        #region SetTrackingMethod
-
-        /// <summary>
-        /// Define the default tracking behavior of our context.
-        /// </summary>
-        /// <param name="trackingBehavior">Enum of type QueryTrackingBehavior.</param>
-        private void SetTrackingBehavior(QueryTrackingBehavior trackingBehavior = QueryTrackingBehavior.NoTracking)
-        {
-            try
-            {
-                _dbContext.ChangeTracker.QueryTrackingBehavior = trackingBehavior;
-            }
-            catch (InvalidOperationException ex)
-            {
-                var error = new Exception(string.Format($"Não foi possível mapear suas entidades. Context: ({this.GetType().Name})"), ex);
-            }
-            catch (Exception ex)
-            {
-                //Pausar para averiguar o erro.
-                System.Diagnostics.Debugger.Break();
-            }
-        }
-
-        #endregion
-
-        #region Dispose
-        
-        /// <summary>
-        /// Método de dispose
-        /// </summary>
-        public void Dispose()
-        {
-            _dbContext.Dispose();
-            GC.SuppressFinalize(this);
-        } 
-
-        #endregion
+        Task<bool> Exists(Expression<Func<TEntity, bool>> predicate);
     }
 }
