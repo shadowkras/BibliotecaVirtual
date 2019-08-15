@@ -1,0 +1,26 @@
+[
+  {
+    "outputFileName": "wwwroot/css/bundles/biblioteca.css",
+    "inputFiles": [
+      "wwwroot/css/biblioteca/*.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/bundles/biblioteca.min.css",
+    "inputFiles": [
+      "wwwroot/css/bundles/biblioteca.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/bundles/biblioteca.js",
+    "inputFiles": [
+      "wwwroot/js/biblioteca/*.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/bundles/biblioteca.min.js",
+    "inputFiles": [
+      "wwwroot/js/bundles/biblioteca.js"
+    ]
+  }
+]

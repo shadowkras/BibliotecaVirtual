@@ -1,0 +1,8 @@
+﻿/* Classes para ajudar na estilização. */
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.hidden {
+    display: none !important;
+}
