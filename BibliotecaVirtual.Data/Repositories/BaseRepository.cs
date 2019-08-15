@@ -292,6 +292,8 @@ namespace BibliotecaVirtual.Data.Repositories
 
         #endregion
 
+        #region Dispose
+        
         /// <summary>
         /// Método de dispose
         /// </summary>
@@ -299,6 +301,8 @@ namespace BibliotecaVirtual.Data.Repositories
         {
             _dbContext.Dispose();
             GC.SuppressFinalize(this);
-        }
+        } 
+
+        #endregion
     }
 }
