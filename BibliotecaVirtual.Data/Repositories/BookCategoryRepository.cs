@@ -2,7 +2,7 @@
 
 namespace BibliotecaVirtual.Data.Repositories
 {
-    public class BookCategoryRepository : BaseRepository<BookCategory>
+    public class BookCategoryRepository : BaseRepository<BookCategory>, IBookCategoryrRepository
     {
         /// <summary>
         /// Construtor do repositório.

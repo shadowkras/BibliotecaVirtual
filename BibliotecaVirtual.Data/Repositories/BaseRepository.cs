@@ -12,15 +12,27 @@ namespace BibliotecaVirtual.Data.Repositories
     /// Classe com os métodos padrões dos repositórios.
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public class BaseRepository<TEntity> : IDisposable where TEntity : class
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity>, IDisposable where TEntity : class
     {
+        /// <summary>
+        /// Contexto do repositório.
+        /// </summary>
         protected readonly ApplicationDbContext _dbContext;
+
+        /// <summary>
+        /// Classe para acesso direto ao repositório.
+        /// </summary>
         public DbSet<TEntity> DbSet;
+
+        /// <summary>
+        /// Retorna se a última operação realizada foi bem sucedida.
+        /// </summary>
+        public bool OperationSuccesful { get; private set; }
 
         #region Construtor
 
         /// <summary>
-        /// Generic construtor based on a specific DbContext.
+        /// Construtor genérico baseado no DbContext.
         /// </summary>
         /// <param name="dbContext"></param>
         public BaseRepository(ApplicationDbContext dbContext)
@@ -296,8 +308,22 @@ namespace BibliotecaVirtual.Data.Repositories
 
         #endregion
 
+        #region Commit
+
+        /// <summary>
+        /// Salva as informações no banco de dados.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> Commit()
+        {
+            OperationSuccesful = await _dbContext.SaveChangesAsync() > 0;
+            return OperationSuccesful;
+        }
+
+        #endregion
+
         #region Dispose
-        
+
         /// <summary>
         /// Método de dispose
         /// </summary>

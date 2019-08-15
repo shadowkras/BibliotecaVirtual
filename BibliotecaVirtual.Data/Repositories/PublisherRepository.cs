@@ -2,7 +2,7 @@
 
 namespace BibliotecaVirtual.Data.Repositories
 {
-    public class PublisherRepository : BaseRepository<Publisher>
+    public class PublisherRepository : BaseRepository<Publisher>, IPublisherRepository
     {
         /// <summary>
         /// Construtor do repositório.

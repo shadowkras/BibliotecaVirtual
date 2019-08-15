@@ -156,5 +156,11 @@ namespace BibliotecaVirtual.Data.Repositories
         /// <param name="predicate">Filter applied to our search.</param>
         /// <returns>Returns if any entity was found using the search criteria.</returns>
         Task<bool> Exists(Expression<Func<TEntity, bool>> predicate);
+
+        /// <summary>
+        /// Salva as informações no banco de dados.
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> Commit();
     }
 }
