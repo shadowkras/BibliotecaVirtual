@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BibliotecaVirtual.Service.Resources {
+namespace BibliotecaVirtual.Application.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace BibliotecaVirtual.Service.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BibliotecaVirtual.Service.Resources.Erros", typeof(Erros).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BibliotecaVirtual.Application.Resources.Criticas", typeof(Criticas).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -59,15 +59,31 @@ namespace BibliotecaVirtual.Service.Resources {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Este campo é requerido..
         /// </summary>
-        internal static string Campo_Requerido
-        {
-            get
-            {
+        internal static string Campo_Requerido {
+            get {
                 return ResourceManager.GetString("Campo_Requerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} já cadastrado..
+        /// </summary>
+        internal static string Ja_Cadastrado_0 {
+            get {
+                return ResourceManager.GetString("Ja_Cadastrado_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Não foi possível {0}..
+        /// </summary>
+        internal static string Possivel_0 {
+            get {
+                return ResourceManager.GetString("Possivel_0", resourceCulture);
             }
         }
     }

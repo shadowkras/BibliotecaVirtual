@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BibliotecaVirtual.Service.Resources {
+namespace BibliotecaVirtual.Application.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace BibliotecaVirtual.Service.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BibliotecaVirtual.Service.Resources.Erros", typeof(Erros).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BibliotecaVirtual.Application.Resources.Erros", typeof(Erros).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

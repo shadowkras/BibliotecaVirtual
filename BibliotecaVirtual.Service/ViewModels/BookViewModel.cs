@@ -1,12 +1,13 @@
-using BibliotecaVirtual.Service.Resources;
+using BibliotecaVirtual.Application.Resources;
+using BibliotecaVirtual.Data.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace BibliotecaVirtual.Service.ViewModels
+namespace BibliotecaVirtual.Application.ViewModels
 {
-    public class BookViewModel
+    public class BookViewModel : IAutoMappleable
     {
         [Display(Name="Livro")]
         public int BookId { get; set; }

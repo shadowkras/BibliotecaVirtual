@@ -1,4 +1,4 @@
-namespace BibliotecaVirtual.Service.ViewModels
+namespace BibliotecaVirtual.Application.ViewModels
 {
     public class ErrorViewModel
     {

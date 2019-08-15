@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
     <Folder Include="Properties\" />
   </ItemGroup>
 
@@ -21,9 +20,9 @@
 
   <ItemGroup>
     <Compile Update="Resources\Criticas.Designer.cs">
-      <DependentUpon>Criticas.resx</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>Criticas.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\Erros.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -34,7 +33,7 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\Criticas.resx">
-      <LastGenOutput>Erros.Designer.cs</LastGenOutput>
+      <LastGenOutput>Criticas.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Erros.resx">

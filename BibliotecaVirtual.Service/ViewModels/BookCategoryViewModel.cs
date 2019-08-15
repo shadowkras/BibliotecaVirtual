@@ -1,9 +1,10 @@
+using BibliotecaVirtual.Data.Interfaces;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace BibliotecaVirtual.Service.ViewModels
+namespace BibliotecaVirtual.Application.ViewModels
 {
-    public class BookCategoryViewModel
+    public class BookCategoryViewModel : IAutoMappleable
     {
         [Display(Name = "Livro")]
         public int BookId { get; set; }
