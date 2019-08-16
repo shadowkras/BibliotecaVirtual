@@ -70,11 +70,29 @@ namespace BibliotecaVirtual.Application.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} já cadastrada..
+        /// </summary>
+        internal static string Ja_Cadastrada_0 {
+            get {
+                return ResourceManager.GetString("Ja_Cadastrada_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} já cadastrado..
         /// </summary>
         internal static string Ja_Cadastrado_0 {
             get {
                 return ResourceManager.GetString("Ja_Cadastrado_0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Já existe {0}..
+        /// </summary>
+        internal static string Ja_Existe_0 {
+            get {
+                return ResourceManager.GetString("Ja_Existe_0", resourceCulture);
             }
         }
         

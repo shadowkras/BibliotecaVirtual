@@ -11,6 +11,7 @@ namespace BibliotecaVirtual.Application.ViewModels
         public int PublisherId { get; set; }
 
         [Display(Name = "Nome")]
+        [Required]
         public string Name { get; set; }
 
         [JsonIgnore]
@@ -19,7 +20,7 @@ namespace BibliotecaVirtual.Application.ViewModels
         /// <summary>
         /// Construtor da entidade Publisher, necessário para o EntityFramework.
         /// </summary>
-        protected PublisherViewModel()
+        public PublisherViewModel()
         { }
     }
 }

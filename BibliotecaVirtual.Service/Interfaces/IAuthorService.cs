@@ -32,6 +32,11 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         Task<AuthorViewModel> UpdateAuthor(AuthorViewModel viewModel);
 
+        /// <summary>
+        /// Deleta um autor cadastrado.
+        /// </summary>
+        /// <param name="viewModel">ViewModel com as informações do autor.</param>
+        /// <returns></returns>
         Task<bool> DeleteAuthor(AuthorViewModel viewModel);
 
         /// <summary>

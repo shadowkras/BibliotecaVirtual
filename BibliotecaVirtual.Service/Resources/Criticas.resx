@@ -120,8 +120,14 @@
   <data name="Campo_Requerido" xml:space="preserve">
     <value>Este campo é requerido.</value>
   </data>
+  <data name="Ja_Cadastrada_0" xml:space="preserve">
+    <value>{0} já cadastrada.</value>
+  </data>
   <data name="Ja_Cadastrado_0" xml:space="preserve">
     <value>{0} já cadastrado.</value>
+  </data>
+  <data name="Ja_Existe_0" xml:space="preserve">
+    <value>Já existe {0}.</value>
   </data>
   <data name="Possivel_0" xml:space="preserve">
     <value>Não foi possível {0}.</value>

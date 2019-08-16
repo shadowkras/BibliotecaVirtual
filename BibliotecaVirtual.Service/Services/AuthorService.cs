@@ -57,6 +57,9 @@ namespace BibliotecaVirtual.Application.Services
             _repository.Insert(author);
             OperationSuccesful = await _repository.Commit();
 
+            //Recuperando o valor recebido pelo AuthorId.
+            viewModel = author.AutoMapear<Author, AuthorViewModel>();
+
             return viewModel;
         }
 
@@ -67,6 +70,12 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<AuthorViewModel> UpdateAuthor(AuthorViewModel viewModel)
         {
+            if (await _repository.Exists(p => p.Name == viewModel.Name))
+            {
+                ModelError = string.Format(Criticas.Ja_Existe_0, "outro(a) Autor(a) com este nome.");
+                return viewModel;
+            }
+
             var author = viewModel.AutoMapear<AuthorViewModel, Author>();
             _repository.Update(author);
             OperationSuccesful = await _repository.Commit();
@@ -74,6 +83,11 @@ namespace BibliotecaVirtual.Application.Services
             return viewModel;
         }
 
+        /// <summary>
+        /// Deleta um autor cadastrado.
+        /// </summary>
+        /// <param name="viewModel">ViewModel com as informações do autor.</param>
+        /// <returns></returns>
         public async Task<bool> DeleteAuthor(AuthorViewModel viewModel)
         {
             var author = viewModel.AutoMapear<AuthorViewModel, Author>();
