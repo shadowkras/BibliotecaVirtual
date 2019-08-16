@@ -111,7 +111,11 @@ namespace BibliotecaVirtual
             #region Services
 
             services.AddTransient<IAuthorService, AuthorService>();
+            services.AddTransient<IPublisherService, PublisherService>();
+            services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IAuthorRepository, AuthorRepository>();
+            services.AddTransient<IPublisherRepository, PublisherRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
 
             #endregion
         }

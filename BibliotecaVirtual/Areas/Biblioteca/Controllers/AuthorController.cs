@@ -55,9 +55,10 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
             if (_authorService.IsSuccessful() == false)
             {
                 AddModelError(_authorService.GetModelErrors());
+                return View(nameof(Edit), author);
             }
 
-            return View(nameof(Edit), author);
+            return RedirectToAction(nameof(Edit), new { author.AuthorId});
         }
 
         [HttpGet]
