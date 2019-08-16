@@ -1,3 +1,74 @@
+// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+// for details on configuring this project to bundle and minify static web assets.
+
+// Write your JavaScript code.
+
+var site = {};
+site.url = location.protocol + "//" + location.host + "/";
+
+/** Congela o objeto para prevenir manipulação. */
+Object.freeze(site);
+/** Funções para controle das informaçoes da entidade de Editora.
+  * Fonte: js/biblioteca/editora.js
+  */
+'use strict';
+
+function editora()
+{
+    if ($('#selectPublisher').length)
+    {
+        editora.vueSelect = new Vue({
+            el: '#selectPublisher',
+            data: {
+                selectPublisher: [],
+                isEmpty: this.selectPublisher.length == 0,
+                selectedValue: -1,
+            },
+            methods: {
+                obterOpcoes: function ()
+                {
+                    var endereco = site.url + 'biblioteca/publisher/getpublishers';
+                    let parametros = {
+                    };
+
+                    $.get(endereco, parametros)
+                        .done(function (response)
+                        {
+                            if (response && response.length)
+                            {
+                                let data = response;
+                                editora.vueSelect.atualizarLista(data);
+                            }
+
+                            $('#selectPublisher .carregando').addClass('hidden');
+                        });
+                },
+                atualizarLista: function (data)
+                {
+                    this.selectPublisher = data;
+                    this.$forceUpdate();
+                },
+                getPublisherId: function (item)
+                {
+                    return item.publisherId;
+                },
+                getPublisherName: function (item)
+                {
+                    return item.name;
+                },
+                newPublisher: function (url)
+                {
+                    window.open(url, '_blank');
+                },
+            },
+            created: function ()
+            {
+                this.obterOpcoes();
+            }
+        });
+    }
+}
+editora();
 /* Fonte: js/biblioteca/image-dropzone-input.js */
 $(document).ready(function ()
 {
@@ -124,16 +195,6 @@ $(document).ready(function ()
         }
     });
 });
-// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
-
-var site = {};
-site.url = location.protocol + "//" + location.host + "/";
-
-/** Congela o objeto para prevenir manipulação. */
-Object.freeze(site);
 /** Objeto que cria as as tooltips na aplicação.
   * Fonte: js/biblioteca/tooltips.js
  */

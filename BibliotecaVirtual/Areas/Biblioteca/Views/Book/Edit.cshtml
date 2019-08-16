@@ -74,7 +74,26 @@
                 </div>
                 <div class="col-sm-12 col-md-5 form-group">
                     <label class="label" asp-for="@Model.PublisherId"></label>
-                    <select asp-for="@Model.PublisherId" class="form-control"></select>
+                    <select id="selectPublisher" asp-for="@Model.PublisherId" class="form-control"
+                            v-model="selectedValue">
+                        <option class="carregando" value="-1">
+                            Carregando. Aguarde um momento.
+                        </option>
+                        <option v-show="isEmpty" value="-1"
+                                v-on:click="newPublisher('@(Url.GetAbsoluteUrl("Publisher", "Add"))')">
+                            Nenhuma editora cadastrada. Clique aqui para cadastrar
+                        </option>
+
+                        <option v-for="item in selectPublisher"
+                                :value="getPublisherId(item)"
+                                :selected="selectedValue == @Model.PublisherId">
+                            {{ getPublisherName(item) }}
+                        </option>
+                        <option value="-1"
+                                v-on:click="obterOpcoes()">
+                            Atualizar editoras
+                        </option>
+                    </select>
                     <span asp-validation-for="@Model.PublisherId" class="text-danger"></span>
                 </div>
                 <div class="col-sm-12 col-md-2">
@@ -94,5 +113,5 @@
     </fieldset>
 
     @{ await Html.RenderPartialAsync("_FormButtons",
-              new FormButtonsViewModel(nameof(BookViewModel.BookId), Model?.BookId)); }
+                new FormButtonsViewModel(nameof(BookViewModel.BookId), Model?.BookId)); }
 </form>

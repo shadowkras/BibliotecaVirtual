@@ -2,6 +2,7 @@
   {
     "outputFileName": "wwwroot/css/bundles/biblioteca.css",
     "inputFiles": [
+      "wwwroot/css/biblioteca/site.css",
       "wwwroot/css/biblioteca/*.css"
     ]
   },
@@ -14,6 +15,7 @@
   {
     "outputFileName": "wwwroot/js/bundles/biblioteca.js",
     "inputFiles": [
+      "wwwroot/js/biblioteca/site.js",
       "wwwroot/js/biblioteca/*.js"
     ]
   },
