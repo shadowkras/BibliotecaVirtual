@@ -59,12 +59,12 @@ namespace BibliotecaVirtual.Application.Services
 
             #endregion
 
-            var Publisher = viewModel.AutoMapear<PublisherViewModel, Publisher>();
-            _repository.Insert(Publisher);
+            var publisher = viewModel.AutoMapear<PublisherViewModel, Publisher>();
+            _repository.Insert(publisher);
             OperationSuccesful = await _repository.Commit();
 
             //Recuperando o valor recebido pelo PublisherId.
-            viewModel = Publisher.AutoMapear<Publisher, PublisherViewModel>();
+            viewModel.PublisherId = publisher.PublisherId;
 
             return viewModel;
         }
@@ -78,7 +78,7 @@ namespace BibliotecaVirtual.Application.Services
         {
             #region Validação da regra de negócios
 
-            if (await _repository.Exists(p => p.Name == viewModel.Name))
+            if (await _repository.Exists(p => p.Name == viewModel.Name && p.PublisherId != viewModel.PublisherId))
             {
                 ModelError = string.Format(Criticas.Ja_Existe_0, "outra Editora com este nome.");
                 return viewModel;
@@ -86,8 +86,8 @@ namespace BibliotecaVirtual.Application.Services
 
             #endregion
 
-            var Publisher = viewModel.AutoMapear<PublisherViewModel, Publisher>();
-            _repository.Update(Publisher);
+            var publisher = viewModel.AutoMapear<PublisherViewModel, Publisher>();
+            _repository.Update(publisher);
             OperationSuccesful = await _repository.Commit();
 
             return viewModel;
@@ -100,8 +100,8 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<bool> DeletePublisher(PublisherViewModel viewModel)
         {
-            var Publisher = viewModel.AutoMapear<PublisherViewModel, Publisher>();
-            _repository.Delete(Publisher);
+            var publisher = viewModel.AutoMapear<PublisherViewModel, Publisher>();
+            _repository.Delete(publisher);
             OperationSuccesful = await _repository.Commit();
 
             return OperationSuccesful;
@@ -126,8 +126,8 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<IEnumerable<PublisherViewModel>> ObtainPublishers()
         {
-            var Publishers = await _repository.SelectAll();
-            var viewModel = Publishers.AutoMapearLista<Publisher, PublisherViewModel>();
+            var publishers = await _repository.SelectAll();
+            var viewModel = publishers.AutoMapearLista<Publisher, PublisherViewModel>();
             return viewModel;
         }
 
@@ -138,8 +138,8 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<PublisherViewModel> ObtainPublisher(int PublisherId)
         {
-            var Publishers = await _repository.Select(p=> p.PublisherId == PublisherId);
-            var viewModel = Publishers.AutoMapear<Publisher, PublisherViewModel>();
+            var publishers = await _repository.Select(p=> p.PublisherId == PublisherId);
+            var viewModel = publishers.AutoMapear<Publisher, PublisherViewModel>();
             return viewModel;
         }
     }

@@ -36,7 +36,7 @@
                             <span asp-validation-for="@Model.BookId" class="text-danger"></span>
                         </label>
                     </div>
-                    <div class="col-sm-9 col-md-8 form-group">
+                    <div class="col-sm-9 col-md-6 form-group">
                         <label class="label" asp-for="@Model.Title"></label>
                         <input asp-for="@Model.Title" class="form-control" />
                         <span asp-validation-for="@Model.Title" class="text-danger"></span>
@@ -44,7 +44,7 @@
                 }
                 else
                 {
-                    <div class="col-sm-12 col-md-10 form-group">
+                    <div class="col-sm-12 col-md-8 form-group">
                         <label class="label" asp-for="@Model.Title"></label>
                         <input asp-for="@Model.Title" class="form-control" />
                         <span asp-validation-for="@Model.Title" class="text-danger"></span>
@@ -56,6 +56,11 @@
                     <input asp-for="@Model.PublishDate" class="form-control" type="date" />
                     <span asp-validation-for="@Model.PublishDate" class="text-danger"></span>
                 </div>
+                <div class="col-sm-12 col-md-2">
+                    <label class="label" asp-for="@Model.Pages"></label>
+                    <input asp-for="@Model.Pages" class="form-control" />
+                    <span asp-validation-for="@Model.Pages" class="text-danger"></span>
+                </div>
 
                 <div class="col-sm-12 col-md-12 form-group">
                     <label class="label" asp-for="@Model.Description"></label>
@@ -66,34 +71,11 @@
                     <label class="label" asp-for="@Model.Sinopsis"></label>
                     <textarea asp-for="@Model.Sinopsis" class="form-control"></textarea>
                     <span asp-validation-for="@Model.Sinopsis" class="text-danger"></span>
-                </div>
-                <div class="col-sm-12 col-md-12 form-group">
-                    <label class="label" asp-for="@Model.CategoriesList"></label>
-                    <select id="selectCategory" asp-for="@Model.CategoriesList" class="form-control"
-                            v-model="selectedValues" multiple>
-                        <option class="carregando" value="-1">
-                            Carregando. Aguarde um momento.
-                        </option>
-                        <option v-show="this.isEmpty()" value="-1" class="form-control"
-                                v-on:click="newCategory('@(Url.GetAbsoluteUrl("Category", "Add"))')">
-                            Nenhum gênero cadastrado. Clique aqui para cadastrar
-                        </option>
-                        <option v-for="item in selectCategory" class="form-control-plaintext"
-                                :value="getCategoryId(item)"
-                                :selected="selectedValue == @(Model.CategoriesList ?? "-1")">
-                            {{ getCategoryName(item) }}
-                        </option>
-                        <option value="-1" class="form-control"
-                                v-on:click="obterOpcoes()">
-                            Atualizar gêneros
-                        </option>
-                    </select>
-                    <span asp-validation-for="@Model.CategoriesList" class="text-danger"></span>
-                </div>
-                <div class="col-sm-12 col-md-5 form-group">
+                </div>                
+                <div class="col-sm-12 col-md-6 form-group">
                     <label class="label" asp-for="@Model.AuthorId"></label>
                     <select id="selectAuthor" asp-for="@Model.AuthorId" class="form-control"
-                            v-model="selectedValue">
+                            v-model="selectedValue" v-bind:onload="setSelectedValue('@(@Model.AuthorId)')">
                         <option value="-1">
                             Selecione o(a) autor(a) do livro.
                         </option>
@@ -116,10 +98,10 @@
                     </select>
                     <span asp-validation-for="@Model.AuthorId" class="text-danger"></span>
                 </div>
-                <div class="col-sm-12 col-md-5 form-group">
+                <div class="col-sm-12 col-md-6 form-group">
                     <label class="label" asp-for="@Model.PublisherId"></label>
                     <select id="selectPublisher" asp-for="@Model.PublisherId" class="form-control"
-                            v-model="selectedValue">
+                            v-model="selectedValue" v-bind:onload="setSelectedValue('@(@Model.PublisherId)')">
                         <option value="-1">
                             Selecione a editora do livro.
                         </option>
@@ -142,18 +124,36 @@
                     </select>
                     <span asp-validation-for="@Model.PublisherId" class="text-danger"></span>
                 </div>
-                <div class="col-sm-12 col-md-2">
-                    <label class="label" asp-for="@Model.Pages"></label>
-                    <input asp-for="@Model.Pages" class="form-control" />
-                    <span asp-validation-for="@Model.Pages" class="text-danger"></span>
-                </div>
-                <div class="col-sm-12 col-md-12 form-group">
-                    <label class="label" asp-for="@Model.CoverImageBase64"></label>
-                    <input type="hidden" asp-for="@Model.CoverImageBase64" class="form-control img-output" readonly />
-                    <span asp-validation-for="@Model.CoverImageBase64" class="text-danger"></span>
-
-                    @await Component.InvokeAsync(typeof(ImagemDropzoneViewComponent), new { extensoesImagensAceitas = "*" })
-                </div>
+                <div class="col-sm-12 col-md-12 row form-group no-margin no-padding">
+                    <div class="col-sm-12 col-md-6">
+                        <label class="label" asp-for="@Model.CategoriesList"></label>
+                        <select id="selectCategory" asp-for="@Model.CategoriesList" class="form-control" multiple
+                                v-model="selectedValues" v-bind:onload="setSelectedValues('@(@Model.CategoriesList)')">
+                            <option class="carregando" value="-1">
+                                Carregando. Aguarde um momento.
+                            </option>
+                            <option v-show="this.isEmpty()" value="-1" class="form-control"
+                                    v-on:click="newCategory('@(Url.GetAbsoluteUrl("Category", "Add"))')">
+                                Nenhum gênero cadastrado. Clique aqui para cadastrar
+                            </option>
+                            <option v-for="item in selectCategory" class="form-control-plaintext"
+                                    :value="getCategoryId(item)">
+                                {{ getCategoryName(item) }}
+                            </option>
+                            <option value="-1" class="form-control"
+                                    v-on:click="obterOpcoes()">
+                                Atualizar gêneros
+                            </option>
+                        </select>
+                        <span asp-validation-for="@Model.CategoriesList" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <label class="label" asp-for="@Model.CoverImageBase64"></label>
+                        <input asp-for="@Model.CoverImageBase64" class="form-control img-output" readonly />
+                        <span asp-validation-for="@Model.CoverImageBase64" class="text-danger"></span>
+                        @await Component.InvokeAsync(typeof(ImagemDropzoneViewComponent), new { extensoesImagensAceitas = "*" })
+                    </div>
+                </div>                
             }
         </div>
     </fieldset>

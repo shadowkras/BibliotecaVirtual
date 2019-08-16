@@ -62,7 +62,7 @@ namespace BibliotecaVirtual.Application.Services
             OperationSuccesful = await _repository.Commit();
 
             //Recuperando o valor recebido pelo AuthorId.
-            viewModel = author.AutoMapear<Author, AuthorViewModel>();
+            viewModel.AuthorId = author.AuthorId;
 
             return viewModel;
         }
@@ -76,7 +76,7 @@ namespace BibliotecaVirtual.Application.Services
         {
             #region Validação da regra de negócios
 
-            if (await _repository.Exists(p => p.Name == viewModel.Name))
+            if (await _repository.Exists(p => p.Name == viewModel.Name && p.AuthorId != viewModel.AuthorId))
             {
                 ModelError = string.Format(Criticas.Ja_Existe_0, "outro(a) Autor(a) com este nome.");
                 return viewModel;

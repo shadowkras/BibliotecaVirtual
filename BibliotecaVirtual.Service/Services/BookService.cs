@@ -4,6 +4,7 @@ using BibliotecaVirtual.Data.Entities;
 using BibliotecaVirtual.Data.Extensions;
 using BibliotecaVirtual.Data.Repositories;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,15 +12,18 @@ namespace BibliotecaVirtual.Application.Services
 {
     public class BookService : IBookService
     {
-        private readonly IBookRepository _repository;
+        private readonly IBookRepository _bookRepository;
+        private readonly IBookCategoryRepository _bookCategoryRepository;
         private string ModelError = string.Empty;
         public bool OperationSuccesful = false;
 
         #region Construtor
 
-        public BookService(IBookRepository repositorio)
+        public BookService(IBookRepository bookRepositorio,
+                           IBookCategoryRepository bookCategoryRepository)
         {
-            _repository = repositorio;
+            _bookRepository = bookRepositorio;
+            _bookCategoryRepository = bookCategoryRepository;
         }
 
         #endregion
@@ -51,20 +55,44 @@ namespace BibliotecaVirtual.Application.Services
         {
             #region Validação da regra de negócios
 
-            if (await _repository.Exists(p => p.Title == viewModel.Title))
+            if (await _bookRepository.Exists(p => p.Title == viewModel.Title))
             {
                 ModelError = string.Format(Criticas.Ja_Cadastrado_0, "Livro");
                 return viewModel;
-            } 
+            }
+            else if (string.IsNullOrEmpty(viewModel.CategoriesList) == true)
+            {
+                ModelError = "Nenhum gênero informado para o livro.";
+                return viewModel;
+            }
 
             #endregion
 
             var book = viewModel.AutoMapear<BookViewModel, Book>();
-            _repository.Insert(book);
-            OperationSuccesful = await _repository.Commit();
+
+            //Convertendo a imagem de string para byte[].
+            book.SetCoverImage(viewModel.CoverImageBase64);
+
+            _bookRepository.Insert(book);
+
+            #region Inserindo categorias
+
+            if (string.IsNullOrEmpty(viewModel.CategoriesList) == false)
+            {
+                var categoryList = viewModel.CategoriesList.Split(',');
+                foreach (var item in categoryList)
+                {
+                    var bookCategory = new BookCategory(book.BookId, int.Parse(item));
+                    _bookCategoryRepository.Insert(bookCategory);
+                }
+            } 
+
+            #endregion
+
+            OperationSuccesful = await _bookRepository.Commit();
 
             //Recuperando o valor recebido pelo BookId.
-            viewModel = book.AutoMapear<Book, BookViewModel>();
+            viewModel.BookId = book.BookId;
 
             return viewModel;
         }
@@ -76,15 +104,52 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<BookViewModel> UpdateBook(BookViewModel viewModel)
         {
-            if (await _repository.Exists(p => p.Title == viewModel.Title))
+            #region Validação da regra de negócios
+
+            if (await _bookRepository.Exists(p => p.Title == viewModel.Title && p.BookId != viewModel.BookId))
             {
                 ModelError = string.Format(Criticas.Ja_Existe_0, "outro Livro com este título.");
                 return viewModel;
             }
+            else if (string.IsNullOrEmpty(viewModel.CategoriesList) == true)
+            {
+                ModelError = "Nenhum gênero informado para o livro.";
+                return viewModel;
+            }
+
+            #endregion
 
             var book = viewModel.AutoMapear<BookViewModel, Book>();
-            _repository.Update(book);
-            OperationSuccesful = await _repository.Commit();
+
+            //Convertendo a imagem de string para byte[].
+            book.SetCoverImage(viewModel.CoverImageBase64);
+
+            _bookRepository.Update(book);
+
+            #region Inserindo categorias
+
+            if (string.IsNullOrEmpty(viewModel.CategoriesList) == false)
+            {
+                var categoryList = viewModel.CategoriesList.Split(',');
+                foreach (var item in categoryList)
+                {                    
+                    var bookCategory = new BookCategory(book.BookId, int.Parse(item));
+
+                    if (await _bookCategoryRepository.Exists(p => p.BookId == bookCategory.BookId &&
+                                                           p.CategoryId == bookCategory.CategoryId) == false)
+                    {
+                        _bookCategoryRepository.Insert(bookCategory);
+                    }
+                    else
+                    {
+                        _bookCategoryRepository.Update(bookCategory);
+                    }
+                }
+            }
+
+            #endregion
+
+            OperationSuccesful = await _bookRepository.Commit();
 
             return viewModel;
         }
@@ -97,8 +162,8 @@ namespace BibliotecaVirtual.Application.Services
         public async Task<bool> DeleteBook(BookViewModel viewModel)
         {
             var book = viewModel.AutoMapear<BookViewModel, Book>();
-            _repository.Delete(book);
-            OperationSuccesful = await _repository.Commit();
+            _bookRepository.Delete(book);
+            OperationSuccesful = await _bookRepository.Commit();
 
             return OperationSuccesful;
         }
@@ -110,8 +175,8 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<bool> DeleteBook(int BookId)
         {
-            _repository.Delete(p=> p.BookId == BookId);
-            OperationSuccesful = await _repository.Commit();
+            _bookRepository.Delete(p => p.BookId == BookId);
+            OperationSuccesful = await _bookRepository.Commit();
 
             return OperationSuccesful;
         }
@@ -122,20 +187,44 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<IEnumerable<BookViewModel>> ObtainBooks()
         {
-            var books = await _repository.SelectAll();
-            var viewModel = books.AutoMapearLista<Book, BookViewModel>();
-            return viewModel;
+            var books = await _bookRepository.SelectList(null, p => new BookViewModel()
+            {
+                BookId = p.BookId,
+                Title = p.Title,
+                AuthorId = p.AuthorId,
+                AuthorName = p.Author.Name, //Obtendo o nome do autor utilizando a propridade de navegação.
+                PublishDate = p.PublishDate,
+            });
+
+            return books;
         }
 
         /// <summary>
         /// Obtém um livro a partir do seu identificador.
         /// </summary>
-        /// <param name="BookId">Identificador do livro.</param>
+        /// <param name="bookId">Identificador do livro.</param>
         /// <returns></returns>
-        public async Task<BookViewModel> ObtainBook(int BookId)
+        public async Task<BookViewModel> ObtainBook(int bookId)
         {
-            var books = await _repository.Select(p=> p.BookId == BookId);
+            var books = await _bookRepository.Select(p => p.BookId == bookId);
+            var categories = await _bookCategoryRepository.SelectList(p => p.BookId == bookId);
+
             var viewModel = books.AutoMapear<Book, BookViewModel>();
+
+            //Criando uma lista de categorias separadas por virgula para levar até a view.
+            foreach (var category in categories)
+            {
+                if (string.IsNullOrEmpty(viewModel.CategoriesList) == false)
+                {
+                    viewModel.CategoriesList += ",";
+                }
+
+                viewModel.CategoriesList += category.CategoryId.ToString();
+            }
+
+            //Convertendo a imagem de  byte[] para string.
+            viewModel.CoverImageBase64 = books.CoverImage.AsStringBase64();
+
             return viewModel;
         }
     }

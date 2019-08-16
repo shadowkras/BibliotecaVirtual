@@ -96,7 +96,7 @@ namespace BibliotecaVirtual.Data.Extensions
             });
 
             return configuracao.CreateMapper().Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source);
-        }
+        }        
 
         #endregion
 

@@ -48,6 +48,13 @@ function autor()
                     this.selectAuthor = data;
                     this.$forceUpdate();
                 },
+                setSelectedValue: function (value)
+                {
+                    if (value)
+                    {
+                        this.selectedValue = value;
+                    }
+                },
                 getAuthorId: function (item)
                 {
                     return item.authorId;
@@ -78,15 +85,31 @@ function categoria()
 {
     if ($('#selectCategory').length)
     {
+        $('#selectPublisher').change(function ()
+        {
+            debugger;
+            if (e.target.options.selectedIndex > -1)
+            {
+                let arr = []
+                let data = e.target.options[e.target.options.selectedIndex].value;
+                categoria.vueSelect.selectedValues.push(data)
+
+                arr = categoria.vueSelect.selectedValues.filter(value => value !== data)
+
+                console.log(arr)
+            }
+        });
+
         categoria.vueSelect = new Vue({
             el: '#selectCategory',
             data: {
                 selectCategory: [],
                 selectedValues: [],
+                loaded: false,
             },
             methods: {
                 obterOpcoes: function ()
-                {
+                {                    
                     var endereco = site.url + 'biblioteca/category/getcategories';
                     let parametros = {
                     };
@@ -106,24 +129,27 @@ function categoria()
                 atualizarLista: function (data)
                 {
                     this.selectCategory = data;
+                    this.loaded = true;
                     this.$forceUpdate();
                 },
                 isEmpty: function ()
                 {
                     return this.selectCategory.length == 0 || false;
                 },
-                selectedOptions: function (e)
+                setSelectedValues: function (value)
                 {
-                    debugger;
-                    if (e.target.options.selectedIndex > -1)
+                    if (loaded == false && typeof value === 'string' || value instanceof String)
                     {
-                        let arr = []
-                        let data = e.target.options[e.target.options.selectedIndex].value
-                        this.selectedItems.push(data)
-
-                        arr = this.selectedItems.filter(value => value !== data)
-
-                        console.log(arr)
+                        if (value.search(',') !== -1)
+                        {
+                            var values = value.split(',');
+                            this.selectedValues = values;
+                        }
+                        else
+                        {
+                            var values = [value];
+                            this.selectedValues = values;
+                        }
                     }
                 },
                 getCategoryId: function (item)
@@ -187,6 +213,13 @@ function editora()
                     this.selectPublisher = data;
                     this.$forceUpdate();
                 },
+                setSelectedValue: function (value)
+                {
+                    if (value)
+                    {
+                        this.selectedValue = value;
+                    }
+                },
                 getPublisherId: function (item)
                 {
                     return item.publisherId;
@@ -244,22 +277,18 @@ $(document).ready(function ()
     };
 
     // Declarações de métodos acionados por meio de clicks.
-
     $('.imagem-dropzone .imagem-dropzone-btn-remover').click(function (e)
     {
         let dropzone = $(this).parents('.imagem-dropzone');
         if (dropzone.length)
         {
-            smartMessageBox.SimNao(e, 'Remover imagem?', 'Deseja realmente remover a imagem?', function ()
-            {
-                dropzone.find('.imagem-dropzone-texto').show();
-                dropzone.find('.imagem-dropzone-src img').removeAttr("src").attr("src", "");
-                dropzone.parent().find('.img-output').attr("value", "");
-                dropzone.find('.imagem-dropzone-borda input[type="file"]').val(null);
-                dropzone.find(".imagem-dropzone-btn-remover").hide();
-                textoImagemTitulo = "Nenhuma imagem selecionada"
-                dropzone.find('.imagem-dropzone-borda input[type="file"]').attr('title', textoImagemTitulo);
-            });
+            dropzone.find('.imagem-dropzone-texto').show();
+            dropzone.find('.imagem-dropzone-src img').removeAttr("src").attr("src", "");
+            dropzone.parent().find('.img-output').attr("value", "");
+            dropzone.find('.imagem-dropzone-borda input[type="file"]').val(null);
+            dropzone.find(".imagem-dropzone-btn-remover").hide();
+            textoImagemTitulo = "Nenhuma imagem selecionada"
+            dropzone.find('.imagem-dropzone-borda input[type="file"]').attr('title', textoImagemTitulo);
         }
 
     });
@@ -319,7 +348,9 @@ $(document).ready(function ()
                         dropzone.find('.imagem-dropzone-src').html($img);
 
                         var dataUrl = data.split(',')[1];
-                        dropzone.parent().find('.img-output').attr("value", dataUrl);
+                        var imgOutput = dropzone.parent().find('.img-output');
+                        imgOutput.attr("value", dataUrl).valid();
+
                         dropzone.find(".imagem-dropzone-btn-remover").show();
                         textoImagemTitulo = "Imagem selecionada"
                         dropzone.find('.imagem-dropzone-borda input[type="file"]').attr('title', textoImagemTitulo);

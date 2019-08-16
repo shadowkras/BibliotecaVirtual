@@ -34,22 +34,18 @@ $(document).ready(function ()
     };
 
     // Declarações de métodos acionados por meio de clicks.
-
     $('.imagem-dropzone .imagem-dropzone-btn-remover').click(function (e)
     {
         let dropzone = $(this).parents('.imagem-dropzone');
         if (dropzone.length)
         {
-            smartMessageBox.SimNao(e, 'Remover imagem?', 'Deseja realmente remover a imagem?', function ()
-            {
-                dropzone.find('.imagem-dropzone-texto').show();
-                dropzone.find('.imagem-dropzone-src img').removeAttr("src").attr("src", "");
-                dropzone.parent().find('.img-output').attr("value", "");
-                dropzone.find('.imagem-dropzone-borda input[type="file"]').val(null);
-                dropzone.find(".imagem-dropzone-btn-remover").hide();
-                textoImagemTitulo = "Nenhuma imagem selecionada"
-                dropzone.find('.imagem-dropzone-borda input[type="file"]').attr('title', textoImagemTitulo);
-            });
+            dropzone.find('.imagem-dropzone-texto').show();
+            dropzone.find('.imagem-dropzone-src img').removeAttr("src").attr("src", "");
+            dropzone.parent().find('.img-output').attr("value", "");
+            dropzone.find('.imagem-dropzone-borda input[type="file"]').val(null);
+            dropzone.find(".imagem-dropzone-btn-remover").hide();
+            textoImagemTitulo = "Nenhuma imagem selecionada"
+            dropzone.find('.imagem-dropzone-borda input[type="file"]').attr('title', textoImagemTitulo);
         }
 
     });
@@ -109,7 +105,9 @@ $(document).ready(function ()
                         dropzone.find('.imagem-dropzone-src').html($img);
 
                         var dataUrl = data.split(',')[1];
-                        dropzone.parent().find('.img-output').attr("value", dataUrl);
+                        var imgOutput = dropzone.parent().find('.img-output');
+                        imgOutput.attr("value", dataUrl).valid();
+
                         dropzone.find(".imagem-dropzone-btn-remover").show();
                         textoImagemTitulo = "Imagem selecionada"
                         dropzone.find('.imagem-dropzone-borda input[type="file"]').attr('title', textoImagemTitulo);

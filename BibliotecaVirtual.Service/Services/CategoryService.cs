@@ -64,7 +64,7 @@ namespace BibliotecaVirtual.Application.Services
             OperationSuccesful = await _repository.Commit();
 
             //Recuperando o valor recebido pelo CategoryId.
-            viewModel = Category.AutoMapear<Category, CategoryViewModel>();
+            viewModel.CategoryId = Category.CategoryId;
 
             return viewModel;
         }
@@ -78,7 +78,7 @@ namespace BibliotecaVirtual.Application.Services
         {
             #region Validação da regra de negócios
 
-            if (await _repository.Exists(p => p.Description == viewModel.Description))
+            if (await _repository.Exists(p => p.Description == viewModel.Description && p.CategoryId != viewModel.CategoryId))
             {
                 ModelError = string.Format(Criticas.Ja_Existe_0, "outro Gênero com esta descrição.");
                 return viewModel;

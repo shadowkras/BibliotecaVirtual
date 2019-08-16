@@ -7,15 +7,31 @@ function categoria()
 {
     if ($('#selectCategory').length)
     {
+        $('#selectPublisher').change(function ()
+        {
+            debugger;
+            if (e.target.options.selectedIndex > -1)
+            {
+                let arr = []
+                let data = e.target.options[e.target.options.selectedIndex].value;
+                categoria.vueSelect.selectedValues.push(data)
+
+                arr = categoria.vueSelect.selectedValues.filter(value => value !== data)
+
+                console.log(arr)
+            }
+        });
+
         categoria.vueSelect = new Vue({
             el: '#selectCategory',
             data: {
                 selectCategory: [],
                 selectedValues: [],
+                loaded: false,
             },
             methods: {
                 obterOpcoes: function ()
-                {
+                {                    
                     var endereco = site.url + 'biblioteca/category/getcategories';
                     let parametros = {
                     };
@@ -35,24 +51,27 @@ function categoria()
                 atualizarLista: function (data)
                 {
                     this.selectCategory = data;
+                    this.loaded = true;
                     this.$forceUpdate();
                 },
                 isEmpty: function ()
                 {
                     return this.selectCategory.length == 0 || false;
                 },
-                selectedOptions: function (e)
+                setSelectedValues: function (value)
                 {
-                    debugger;
-                    if (e.target.options.selectedIndex > -1)
+                    if (loaded == false && typeof value === 'string' || value instanceof String)
                     {
-                        let arr = []
-                        let data = e.target.options[e.target.options.selectedIndex].value
-                        this.selectedItems.push(data)
-
-                        arr = this.selectedItems.filter(value => value !== data)
-
-                        console.log(arr)
+                        if (value.search(',') !== -1)
+                        {
+                            var values = value.split(',');
+                            this.selectedValues = values;
+                        }
+                        else
+                        {
+                            var values = [value];
+                            this.selectedValues = values;
+                        }
                     }
                 },
                 getCategoryId: function (item)

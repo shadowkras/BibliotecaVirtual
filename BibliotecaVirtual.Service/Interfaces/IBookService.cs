@@ -42,9 +42,9 @@ namespace BibliotecaVirtual.Application.Services
         /// <summary>
         /// Deleta um livro cadastrado.
         /// </summary>
-        /// <param name="BookId">Identificador do livro.</param>
+        /// <param name="bookId">Identificador do livro.</param>
         /// <returns></returns>
-        Task<bool> DeleteBook(int BookId);
+        Task<bool> DeleteBook(int bookId);
 
         /// <summary>
         /// Obtém uma lista com os livros cadastrados.
@@ -55,8 +55,8 @@ namespace BibliotecaVirtual.Application.Services
         /// <summary>
         /// Obtém um livro a partir do seu identificador.
         /// </summary>
-        /// <param name="BookId">Identificador do livro.</param>
+        /// <param name="bookId">Identificador do livro.</param>
         /// <returns></returns>
-        Task<BookViewModel> ObtainBook(int BookId);
+        Task<BookViewModel> ObtainBook(int bookId);
     }
 }

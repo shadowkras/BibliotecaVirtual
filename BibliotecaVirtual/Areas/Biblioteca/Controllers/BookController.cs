@@ -63,9 +63,9 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int BookId)
+        public async Task<IActionResult> Edit(int bookId)
         {
-            var book = await _bookService.ObtainBook(BookId);
+            var book = await _bookService.ObtainBook(bookId);
             return View(nameof(Edit), book);
         }
 
@@ -89,9 +89,9 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int BookId)
+        public async Task<IActionResult> Delete(int bookId)
         {
-            await _bookService.DeleteBook(BookId);
+            await _bookService.DeleteBook(bookId);
 
             if (_bookService.IsSuccessful() == false)
             {

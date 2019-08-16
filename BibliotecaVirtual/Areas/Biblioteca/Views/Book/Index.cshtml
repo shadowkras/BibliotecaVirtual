@@ -38,21 +38,17 @@
                 {
                 <tr>
                     @{
-                        <td class='grade-col-campo'
-                            ng-bind="item.@(nameof(modelo.BookId))">
+                        <td class='grade-col-campo'>
                             @item.BookId
                         </td>
-                        <td class='grade-col-campo'
-                            ng-bind="item.@(nameof(modelo.Title))">
+                        <td class='grade-col-campo'>
                             @item.Title
                         </td>
-                        <td class='grade-col-campo'
-                            ng-bind="item.@(nameof(modelo.AuthorName))">
+                        <td class='grade-col-campo'>
                             @item.AuthorName
                         </td>
-                        <td class='grade-col-campo'
-                            ng-bind="item.@(nameof(modelo.PublishDate))">
-                            @item.PublishDate
+                        <td class='grade-col-campo'>
+                            @item.PublishDate.ToShortDateString()
                         </td>
                         <td class="grade-col-alterar">
                             <a class='btn btn-primary btn-sm' tabindex="0"

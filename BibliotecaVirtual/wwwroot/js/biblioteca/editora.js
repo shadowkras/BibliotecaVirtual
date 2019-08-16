@@ -38,6 +38,13 @@ function editora()
                     this.selectPublisher = data;
                     this.$forceUpdate();
                 },
+                setSelectedValue: function (value)
+                {
+                    if (value)
+                    {
+                        this.selectedValue = value;
+                    }
+                },
                 getPublisherId: function (item)
                 {
                     return item.publisherId;

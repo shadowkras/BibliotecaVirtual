@@ -38,6 +38,13 @@ function autor()
                     this.selectAuthor = data;
                     this.$forceUpdate();
                 },
+                setSelectedValue: function (value)
+                {
+                    if (value)
+                    {
+                        this.selectedValue = value;
+                    }
+                },
                 getAuthorId: function (item)
                 {
                     return item.authorId;
