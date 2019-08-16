@@ -3,6 +3,6 @@ using System;
 
 namespace BibliotecaVirtual.Data.Repositories
 {
-    public interface IBookCategoryrRepository : IBaseRepository<BookCategory>, IDisposable
+    public interface IBookCategoryRepository : IBaseRepository<BookCategory>, IDisposable
     { }
 }

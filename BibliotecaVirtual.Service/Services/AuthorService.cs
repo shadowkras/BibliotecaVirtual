@@ -47,11 +47,15 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<AuthorViewModel> AddAuthor(AuthorViewModel viewModel)
         {
-            if(await _repository.Exists(p=> p.Name == viewModel.Name))
+            #region Validação da regra de negócios
+
+            if (await _repository.Exists(p=> p.Name == viewModel.Name))
             {
                 ModelError = string.Format(Criticas.Ja_Cadastrado_0, "Autor(a)");
                 return viewModel;
             }
+
+            #endregion
 
             var author = viewModel.AutoMapear<AuthorViewModel, Author>();
             _repository.Insert(author);
@@ -70,11 +74,15 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<AuthorViewModel> UpdateAuthor(AuthorViewModel viewModel)
         {
+            #region Validação da regra de negócios
+
             if (await _repository.Exists(p => p.Name == viewModel.Name))
             {
                 ModelError = string.Format(Criticas.Ja_Existe_0, "outro(a) Autor(a) com este nome.");
                 return viewModel;
             }
+
+            #endregion
 
             var author = viewModel.AutoMapear<AuthorViewModel, Author>();
             _repository.Update(author);

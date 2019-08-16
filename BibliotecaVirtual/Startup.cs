@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Localization;
 using BibliotecaVirtual.Data;
 using BibliotecaVirtual.Application.Services;
 using BibliotecaVirtual.Data.Repositories;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace BibliotecaVirtual
 {
@@ -31,7 +33,7 @@ namespace BibliotecaVirtual
             services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Fastest);
             services.AddResponseCompression(options =>
             {
-                //options.EnableForHttps = true;
+                options.EnableForHttps = true;
                 options.MimeTypes = new[]
                 {
                     // Default
@@ -74,9 +76,14 @@ namespace BibliotecaVirtual
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
+                var supportedCultures = new[] { new CultureInfo("pt-BR") };
+                var culture = new RequestCulture(culture: "pt-BR", uiCulture: "pt-BR");
+                
                 #region Default Culture
 
-                options.DefaultRequestCulture = new RequestCulture(culture: "pt-BR", uiCulture: "pt-BR");
+                options.DefaultRequestCulture = culture;
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
 
                 #endregion
             });
@@ -113,9 +120,12 @@ namespace BibliotecaVirtual
             services.AddTransient<IAuthorService, AuthorService>();
             services.AddTransient<IPublisherService, PublisherService>();
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IBookService, BookService>();
             services.AddTransient<IAuthorRepository, AuthorRepository>();
             services.AddTransient<IPublisherRepository, PublisherRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IBookRepository, BookRepository>();
+            services.AddTransient<IBookCategoryRepository, BookCategoryRepository>();
 
             #endregion
         }
@@ -147,7 +157,7 @@ namespace BibliotecaVirtual
 
             #region Https
 
-            //app.UseHttpsRedirection(); 
+            app.UseHttpsRedirection();
 
             #endregion
 

@@ -22,6 +22,8 @@ namespace BibliotecaVirtual.Application.Services
             _repository = repositorio;
         }
 
+        #endregion
+
         /// <summary>
         /// Retorna se a operação foi bem sucedida.
         /// </summary>
@@ -47,11 +49,15 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<CategoryViewModel> AddCategory(CategoryViewModel viewModel)
         {
-            if(await _repository.Exists(p=> p.Description == viewModel.Description))
+            #region Validação da regra de negócios
+
+            if (await _repository.Exists(p=> p.Description == viewModel.Description))
             {
                 ModelError = string.Format(Criticas.Ja_Cadastrado_0, "Gênero");
                 return viewModel;
             }
+
+            #endregion
 
             var Category = viewModel.AutoMapear<CategoryViewModel, Category>();
             _repository.Insert(Category);
@@ -70,11 +76,15 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<CategoryViewModel> UpdateCategory(CategoryViewModel viewModel)
         {
+            #region Validação da regra de negócios
+
             if (await _repository.Exists(p => p.Description == viewModel.Description))
             {
                 ModelError = string.Format(Criticas.Ja_Existe_0, "outro Gênero com esta descrição.");
                 return viewModel;
             }
+
+            #endregion
 
             var Category = viewModel.AutoMapear<CategoryViewModel, Category>();
             _repository.Update(Category);
@@ -132,7 +142,5 @@ namespace BibliotecaVirtual.Application.Services
             var viewModel = Categorys.AutoMapear<Category, CategoryViewModel>();
             return viewModel;
         }
-
-        #endregion
     }
 }

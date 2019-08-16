@@ -22,6 +22,8 @@ namespace BibliotecaVirtual.Application.Services
             _repository = repositorio;
         }
 
+        #endregion
+
         /// <summary>
         /// Retorna se a operação foi bem sucedida.
         /// </summary>
@@ -47,11 +49,15 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<PublisherViewModel> AddPublisher(PublisherViewModel viewModel)
         {
-            if(await _repository.Exists(p=> p.Name == viewModel.Name))
+            #region Validação da regra de negócios
+
+            if (await _repository.Exists(p=> p.Name == viewModel.Name))
             {
                 ModelError = string.Format(Criticas.Ja_Cadastrada_0, "Editora");
                 return viewModel;
             }
+
+            #endregion
 
             var Publisher = viewModel.AutoMapear<PublisherViewModel, Publisher>();
             _repository.Insert(Publisher);
@@ -70,11 +76,15 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<PublisherViewModel> UpdatePublisher(PublisherViewModel viewModel)
         {
+            #region Validação da regra de negócios
+
             if (await _repository.Exists(p => p.Name == viewModel.Name))
             {
                 ModelError = string.Format(Criticas.Ja_Existe_0, "outra Editora com este nome.");
                 return viewModel;
             }
+
+            #endregion
 
             var Publisher = viewModel.AutoMapear<PublisherViewModel, Publisher>();
             _repository.Update(Publisher);
@@ -132,7 +142,5 @@ namespace BibliotecaVirtual.Application.Services
             var viewModel = Publishers.AutoMapear<Publisher, PublisherViewModel>();
             return viewModel;
         }
-
-        #endregion
     }
 }
