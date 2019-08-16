@@ -50,7 +50,7 @@ namespace BibliotecaVirtual.Application.Services
         /// Obtém uma lista com os gênero cadastrados.
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<CategoryViewModel>> ObtainCategorys();
+        Task<IEnumerable<CategoryViewModel>> ObtainCategories();
 
         /// <summary>
         /// Obtém um gênero a partir do seu identificador.

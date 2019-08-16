@@ -30,9 +30,11 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
         private void AddModelError(string message)
         {
             ModelState.AddModelError(string.Empty, message);
-        } 
+        }
 
         #endregion
+
+        #region Métodos de View
 
         public async Task<IActionResult> Index()
         {
@@ -58,7 +60,7 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
                 return View(nameof(Edit), author);
             }
 
-            return RedirectToAction(nameof(Edit), new { author.AuthorId});
+            return RedirectToAction(nameof(Edit), new { author.AuthorId });
         }
 
         [HttpGet]
@@ -97,6 +99,18 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        } 
+
+        #endregion
+
+        #region Métodos de Api
+
+        public async Task<IActionResult> GetAuthors()
+        {
+            var authors = await _authorService.ObtainAuthors();
+            return Json(authors);
         }
+
+        #endregion
     }
 }

@@ -59,12 +59,12 @@ namespace BibliotecaVirtual.Application.Services
 
             #endregion
 
-            var Book = viewModel.AutoMapear<BookViewModel, Book>();
-            _repository.Insert(Book);
+            var book = viewModel.AutoMapear<BookViewModel, Book>();
+            _repository.Insert(book);
             OperationSuccesful = await _repository.Commit();
 
             //Recuperando o valor recebido pelo BookId.
-            viewModel = Book.AutoMapear<Book, BookViewModel>();
+            viewModel = book.AutoMapear<Book, BookViewModel>();
 
             return viewModel;
         }
@@ -82,8 +82,8 @@ namespace BibliotecaVirtual.Application.Services
                 return viewModel;
             }
 
-            var Book = viewModel.AutoMapear<BookViewModel, Book>();
-            _repository.Update(Book);
+            var book = viewModel.AutoMapear<BookViewModel, Book>();
+            _repository.Update(book);
             OperationSuccesful = await _repository.Commit();
 
             return viewModel;
@@ -96,8 +96,8 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<bool> DeleteBook(BookViewModel viewModel)
         {
-            var Book = viewModel.AutoMapear<BookViewModel, Book>();
-            _repository.Delete(Book);
+            var book = viewModel.AutoMapear<BookViewModel, Book>();
+            _repository.Delete(book);
             OperationSuccesful = await _repository.Commit();
 
             return OperationSuccesful;
@@ -122,8 +122,8 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<IEnumerable<BookViewModel>> ObtainBooks()
         {
-            var Books = await _repository.SelectAll();
-            var viewModel = Books.AutoMapearLista<Book, BookViewModel>();
+            var books = await _repository.SelectAll();
+            var viewModel = books.AutoMapearLista<Book, BookViewModel>();
             return viewModel;
         }
 
@@ -134,8 +134,8 @@ namespace BibliotecaVirtual.Application.Services
         /// <returns></returns>
         public async Task<BookViewModel> ObtainBook(int BookId)
         {
-            var Books = await _repository.Select(p=> p.BookId == BookId);
-            var viewModel = Books.AutoMapear<Book, BookViewModel>();
+            var books = await _repository.Select(p=> p.BookId == BookId);
+            var viewModel = books.AutoMapear<Book, BookViewModel>();
             return viewModel;
         }
     }

@@ -30,14 +30,16 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
         private void AddModelError(string message)
         {
             ModelState.AddModelError(string.Empty, message);
-        } 
+        }
 
         #endregion
 
+        #region Métodos de View
+
         public async Task<IActionResult> Index()
         {
-            var Categorys = await _categoryService.ObtainCategorys();
-            return View(nameof(Index), Categorys);
+            var categories = await _categoryService.ObtainCategories();
+            return View(nameof(Index), categories);
         }
 
         [HttpGet]
@@ -58,7 +60,7 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
                 return View(nameof(Edit), category);
             }
 
-            return RedirectToAction(nameof(Edit), new { category.CategoryId});
+            return RedirectToAction(nameof(Edit), new { category.CategoryId });
         }
 
         [HttpGet]
@@ -97,6 +99,18 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        } 
+
+        #endregion
+
+        #region Métodos de Api
+
+        public async Task<IActionResult> GetCategories()
+        {
+            var categories = await _categoryService.ObtainCategories();
+            return Json(categories);
         }
+
+        #endregion
     }
 }

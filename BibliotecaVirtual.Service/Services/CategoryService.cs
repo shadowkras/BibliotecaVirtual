@@ -124,7 +124,7 @@ namespace BibliotecaVirtual.Application.Services
         /// Obtém uma lista com os gêneroes cadastrados.
         /// </summary>
         /// <returns></returns>
-        public async Task<IEnumerable<CategoryViewModel>> ObtainCategorys()
+        public async Task<IEnumerable<CategoryViewModel>> ObtainCategories()
         {
             var Categorys = await _repository.SelectAll();
             var viewModel = Categorys.AutoMapearLista<Category, CategoryViewModel>();

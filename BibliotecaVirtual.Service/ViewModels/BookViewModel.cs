@@ -25,6 +25,7 @@ namespace BibliotecaVirtual.Application.ViewModels
         public string Sinopsis { get; set; }
 
         [Display(Name = "Páginas")]
+        [Range(1, ushort.MaxValue, ErrorMessageResourceType = typeof(Criticas), ErrorMessageResourceName = nameof(Criticas.Campo_Requerido))]
         public int Pages { get; set; }
 
         [Display(Name = "Data de publicação")]
@@ -33,10 +34,12 @@ namespace BibliotecaVirtual.Application.ViewModels
         public DateTime PublishDate { get; set; } = System.DateTime.Now;
 
         [Display(Name = "Capa")]
+        [Required(ErrorMessageResourceType = typeof(Criticas), ErrorMessageResourceName = nameof(Criticas.Campo_Requerido))]
         public string CoverImageBase64 { get; set; }
 
         [Display(Name = "Autor(a)")]
         [Required(ErrorMessageResourceType = typeof(Criticas), ErrorMessageResourceName = nameof(Criticas.Campo_Requerido))]
+        [Range(0, ushort.MaxValue, ErrorMessageResourceType = typeof(Criticas), ErrorMessageResourceName = nameof(Criticas.Campo_Requerido))]
         public int AuthorId { get; set; }
 
         [Display(Name = "Autor(a)")]
@@ -44,6 +47,7 @@ namespace BibliotecaVirtual.Application.ViewModels
 
         [Display(Name = "Editora")]
         [Required(ErrorMessageResourceType = typeof(Criticas), ErrorMessageResourceName = nameof(Criticas.Campo_Requerido))]
+        [Range(0, ushort.MaxValue, ErrorMessageResourceType = typeof(Criticas), ErrorMessageResourceName = nameof(Criticas.Campo_Requerido))]
         public int PublisherId { get; set; }
 
         [Display(Name = "Editora")]

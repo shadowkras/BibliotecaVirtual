@@ -47,37 +47,39 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(BookViewModel viewModel)
         {
-            var Book = await _bookService.AddBook(viewModel);
+            var book = await _bookService.AddBook(viewModel);
 
             if (_bookService.IsSuccessful() == false)
             {
                 AddModelError(_bookService.GetModelErrors());
-                return View(nameof(Edit), Book);
+                return View(nameof(Edit), book);
             }
 
-            return RedirectToAction(nameof(Edit), new { Book.BookId});
+            return RedirectToAction(nameof(Edit), new { book.BookId});
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int BookId)
         {
-            var Book = await _bookService.ObtainBook(BookId);
-            return View(nameof(Edit), Book);
+            var book = await _bookService.ObtainBook(BookId);
+            return View(nameof(Edit), book);
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(BookViewModel viewModel)
         {
-            var Book = await _bookService.UpdateBook(viewModel);
+            var book = await _bookService.UpdateBook(viewModel);
 
             if (_bookService.IsSuccessful() == false)
             {
                 AddModelError(_bookService.GetModelErrors());
-                return View(nameof(Edit), Book);
+                return View(nameof(Edit), book);
             }
             else
             {

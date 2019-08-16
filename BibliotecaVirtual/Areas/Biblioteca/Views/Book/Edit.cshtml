@@ -67,15 +67,62 @@
                     <textarea asp-for="@Model.Sinopsis" class="form-control"></textarea>
                     <span asp-validation-for="@Model.Sinopsis" class="text-danger"></span>
                 </div>
+                <div class="col-sm-12 col-md-12 form-group">
+                    <label class="label" asp-for="@Model.CategoriesList"></label>
+                    <select id="selectCategory" asp-for="@Model.CategoriesList" class="form-control"
+                            v-model="selectedValues" multiple>
+                        <option class="carregando" value="-1">
+                            Carregando. Aguarde um momento.
+                        </option>
+                        <option v-show="this.isEmpty()" value="-1" class="form-control"
+                                v-on:click="newCategory('@(Url.GetAbsoluteUrl("Category", "Add"))')">
+                            Nenhum gênero cadastrado. Clique aqui para cadastrar
+                        </option>
+                        <option v-for="item in selectCategory" class="form-control-plaintext"
+                                :value="getCategoryId(item)"
+                                :selected="selectedValue == @(Model.CategoriesList ?? "-1")">
+                            {{ getCategoryName(item) }}
+                        </option>
+                        <option value="-1" class="form-control"
+                                v-on:click="obterOpcoes()">
+                            Atualizar gêneros
+                        </option>
+                    </select>
+                    <span asp-validation-for="@Model.CategoriesList" class="text-danger"></span>
+                </div>
                 <div class="col-sm-12 col-md-5 form-group">
                     <label class="label" asp-for="@Model.AuthorId"></label>
-                    <select asp-for="@Model.AuthorId" class="form-control"></select>
+                    <select id="selectAuthor" asp-for="@Model.AuthorId" class="form-control"
+                            v-model="selectedValue">
+                        <option value="-1">
+                            Selecione o(a) autor(a) do livro.
+                        </option>
+                        <option class="carregando" value="-1">
+                            Carregando. Aguarde um momento.
+                        </option>
+                        <option v-show="isEmpty" value="-1"
+                                v-on:click="newAuthor('@(Url.GetAbsoluteUrl("Author", "Add"))')">
+                            Nenhum autor(a) cadastrado(a). Clique aqui para cadastrar
+                        </option>
+                        <option v-for="item in selectAuthor"
+                                :value="getAuthorId(item)"
+                                :selected="selectedValue == @Model.AuthorId">
+                            {{ getAuthorName(item) }}
+                        </option>
+                        <option value="-1" class="form-control"
+                                v-on:click="obterOpcoes()">
+                            Atualizar autores(as)
+                        </option>
+                    </select>
                     <span asp-validation-for="@Model.AuthorId" class="text-danger"></span>
                 </div>
                 <div class="col-sm-12 col-md-5 form-group">
                     <label class="label" asp-for="@Model.PublisherId"></label>
                     <select id="selectPublisher" asp-for="@Model.PublisherId" class="form-control"
                             v-model="selectedValue">
+                        <option value="-1">
+                            Selecione a editora do livro.
+                        </option>
                         <option class="carregando" value="-1">
                             Carregando. Aguarde um momento.
                         </option>
@@ -83,13 +130,12 @@
                                 v-on:click="newPublisher('@(Url.GetAbsoluteUrl("Publisher", "Add"))')">
                             Nenhuma editora cadastrada. Clique aqui para cadastrar
                         </option>
-
                         <option v-for="item in selectPublisher"
                                 :value="getPublisherId(item)"
                                 :selected="selectedValue == @Model.PublisherId">
                             {{ getPublisherName(item) }}
                         </option>
-                        <option value="-1"
+                        <option value="-1" class="form-control"
                                 v-on:click="obterOpcoes()">
                             Atualizar editoras
                         </option>

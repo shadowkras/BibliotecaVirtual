@@ -49,6 +49,7 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(PublisherViewModel viewModel)
         {
@@ -71,6 +72,7 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
         }
 
         [HttpPost]
+        [DisableRequestSizeLimit]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(PublisherViewModel viewModel)
         {

@@ -8,6 +8,145 @@ site.url = location.protocol + "//" + location.host + "/";
 
 /** Congela o objeto para prevenir manipulação. */
 Object.freeze(site);
+/** Funções para controle das informaçoes da entidade de Autor(a).
+  * Fonte: js/biblioteca/autor.js
+  */
+'use strict';
+
+function autor()
+{
+    if ($('#selectAuthor').length)
+    {
+        autor.vueSelect = new Vue({
+            el: '#selectAuthor',
+            data: {
+                selectAuthor: [],
+                isEmpty: this.selectPublisher.length == 0,
+                selectedValue: -1,
+            },
+            methods: {
+                obterOpcoes: function ()
+                {
+                    var endereco = site.url + 'biblioteca/author/getauthors';
+                    let parametros = {
+                    };
+
+                    $.get(endereco, parametros)
+                        .done(function (response)
+                        {
+                            if (response && response.length)
+                            {
+                                let data = response;
+                                autor.vueSelect.atualizarLista(data);
+                            }
+
+                            $('#selectAuthor .carregando').addClass('hidden');
+                        });
+                },
+                atualizarLista: function (data)
+                {
+                    this.selectAuthor = data;
+                    this.$forceUpdate();
+                },
+                getAuthorId: function (item)
+                {
+                    return item.authorId;
+                },
+                getAuthorName: function (item)
+                {
+                    return item.name;
+                },
+                newAuthor: function (url)
+                {
+                    window.open(url, '_blank');
+                },
+            },
+            created: function ()
+            {
+                this.obterOpcoes();
+            }
+        });
+    }
+}
+autor();
+/** Funções para controle das informaçoes da entidade de Autor(a).
+  * Fonte: js/biblioteca/categoria.js
+  */
+'use strict';
+
+function categoria()
+{
+    if ($('#selectCategory').length)
+    {
+        categoria.vueSelect = new Vue({
+            el: '#selectCategory',
+            data: {
+                selectCategory: [],
+                selectedValues: [],
+            },
+            methods: {
+                obterOpcoes: function ()
+                {
+                    var endereco = site.url + 'biblioteca/category/getcategories';
+                    let parametros = {
+                    };
+
+                    $.get(endereco, parametros)
+                        .done(function (response)
+                        {
+                            if (response && response.length)
+                            {
+                                let data = response;
+                                categoria.vueSelect.atualizarLista(data);
+                            }
+
+                            $('#selectCategory .carregando').addClass('hidden');
+                        });
+                },
+                atualizarLista: function (data)
+                {
+                    this.selectCategory = data;
+                    this.$forceUpdate();
+                },
+                isEmpty: function ()
+                {
+                    return this.selectCategory.length == 0 || false;
+                },
+                selectedOptions: function (e)
+                {
+                    debugger;
+                    if (e.target.options.selectedIndex > -1)
+                    {
+                        let arr = []
+                        let data = e.target.options[e.target.options.selectedIndex].value
+                        this.selectedItems.push(data)
+
+                        arr = this.selectedItems.filter(value => value !== data)
+
+                        console.log(arr)
+                    }
+                },
+                getCategoryId: function (item)
+                {
+                    return item.categoryId;
+                },
+                getCategoryName: function (item)
+                {
+                    return item.description;
+                },
+                newCategory: function (url)
+                {
+                    window.open(url, '_blank');
+                },
+            },
+            created: function ()
+            {
+                this.obterOpcoes();
+            }
+        });
+    }
+}
+categoria();
 /** Funções para controle das informaçoes da entidade de Editora.
   * Fonte: js/biblioteca/editora.js
   */
