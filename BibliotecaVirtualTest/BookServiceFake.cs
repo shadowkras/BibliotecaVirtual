@@ -86,5 +86,12 @@ namespace BibliotecaVirtualTest
             var existing = await Task.Run(() => _books.First(a => a.BookId == bookId));
             return existing;
         }
+
+        public async Task<IEnumerable<BookViewModel>> ObtainBooks(string title, string author)
+        {
+            var existing = await Task.Run(() => _books.FindAll(a => a.Title.Contains(title) || 
+                                                                    a.Author.Name.Contains(author)));
+            return existing;
+        }
     }
 }

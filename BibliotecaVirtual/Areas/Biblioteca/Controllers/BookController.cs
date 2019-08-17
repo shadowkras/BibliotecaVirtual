@@ -17,7 +17,7 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
         public BookController(IBookService bookService)
         {
             _bookService = bookService;
-        } 
+        }
 
         #endregion
 
@@ -30,14 +30,19 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
         private void AddModelError(string message)
         {
             ModelState.AddModelError(string.Empty, message);
-        } 
+        }
 
         #endregion
 
         public async Task<IActionResult> Index()
         {
-            var Books = await _bookService.ObtainBooks();
-            return View(nameof(Index), Books);
+            return View(nameof(Index), null);
+        }
+
+        public async Task<IActionResult> GetBooks(string title, string author)
+        {
+            var books = await _bookService.ObtainBooks(title, author);
+            return Json(books);
         }
 
         [HttpGet]
@@ -65,6 +70,12 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int bookId)
         {
+            if(bookId <= 0)
+            {
+                AddModelError("Livro não encontrado");
+                return View(nameof(Edit), new BookViewModel());
+            }
+
             var book = await _bookService.ObtainBook(bookId);
             return View(nameof(Edit), book);
         }

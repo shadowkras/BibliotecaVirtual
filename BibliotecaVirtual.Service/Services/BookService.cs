@@ -1,4 +1,5 @@
-﻿using BibliotecaVirtual.Application.Resources;
+﻿using BibliotecaVirtual.Application.Extensions;
+using BibliotecaVirtual.Application.Resources;
 using BibliotecaVirtual.Application.ViewModels;
 using BibliotecaVirtual.Data.Entities;
 using BibliotecaVirtual.Data.Extensions;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace BibliotecaVirtual.Application.Services
 {
@@ -179,6 +181,57 @@ namespace BibliotecaVirtual.Application.Services
         public async Task<IEnumerable<BookViewModel>> ObtainBooks()
         {
             var books = await _bookRepository.SelectList(null, p => new BookViewModel()
+            {
+                BookId = p.BookId,
+                Title = p.Title,
+                AuthorId = p.AuthorId,
+                AuthorName = p.Author.Name, //Obtendo o nome do autor utilizando a propridade de navegação.
+                PublishDate = p.PublishDate,
+            });
+
+            return books;
+        }
+
+        /// <summary>
+        /// Obtém uma lista com os livros cadastrados.
+        /// </summary>
+        /// <param name="title">Filtro de pesquisa pelo titulo do livro.</param>
+        /// <param name="author">Filtro de pesquisa pelo autor do livro.</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<BookViewModel>> ObtainBooks(string title, string author)
+        {
+            #region Predicados com os filtros de pesquisa
+
+            Expression<Func<Book, bool>> predicate = null;
+            Expression<Func<Book, bool>> predicateTitle = null;
+            Expression<Func<Book, bool>> predicateAuthor = null;
+
+            if (string.IsNullOrEmpty(title) == false)
+            {
+                predicateTitle = p => p.Title.Contains(title);
+            }
+            if (string.IsNullOrEmpty(author) == false)
+            {
+                predicateAuthor = p => p.Author.Name.Contains(author);
+            }
+
+            if (predicateTitle != null && predicateAuthor == null)
+            {
+                predicate = predicateTitle;
+            }
+            else if (predicateTitle == null && predicateAuthor != null)
+            {
+                predicate = predicateAuthor;
+            }
+            else if (predicateTitle != null && predicateAuthor != null)
+            {
+                predicate = predicateTitle.Or(predicateAuthor);
+            } 
+
+            #endregion
+
+            var books = await _bookRepository.SelectList(predicate, 
+                p => new BookViewModel()
             {
                 BookId = p.BookId,
                 Title = p.Title,

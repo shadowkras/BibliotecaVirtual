@@ -154,6 +154,12 @@ input.hide-input {
     padding: 0;
 }
 
+.botao-cadastrar-livro {
+    padding-top: 3rem;
+    position: absolute;
+    right: 0;
+}
+
 /* Classes para ajudar na estilização. */
 .cursor-pointer {
     cursor: pointer !important;
