@@ -40,7 +40,7 @@ function editora()
                 },
                 setSelectedValue: function (value)
                 {
-                    if (value)
+                    if (value && parseInt(value))
                     {
                         this.selectedValue = value;
                     }

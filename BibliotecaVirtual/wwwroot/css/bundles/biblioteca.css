@@ -148,7 +148,7 @@ form .imagem-dropzone .imagem-dropzone-btn-remover {
         color: #dc3545;
     }
 
-input.img-output {
+input.hide-input {
     width: 0;
     height: 0;
     padding: 0;

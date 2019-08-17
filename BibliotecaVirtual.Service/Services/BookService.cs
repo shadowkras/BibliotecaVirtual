@@ -60,7 +60,7 @@ namespace BibliotecaVirtual.Application.Services
                 ModelError = string.Format(Criticas.Ja_Cadastrado_0, "Livro");
                 return viewModel;
             }
-            else if (string.IsNullOrEmpty(viewModel.CategoriesList) == true)
+            else if (viewModel.CategoriesList.Count == 0)
             {
                 ModelError = "Nenhum gênero informado para o livro.";
                 return viewModel;
@@ -77,12 +77,11 @@ namespace BibliotecaVirtual.Application.Services
 
             #region Inserindo categorias
 
-            if (string.IsNullOrEmpty(viewModel.CategoriesList) == false)
+            if (viewModel.CategoriesList.Count > 0)
             {
-                var categoryList = viewModel.CategoriesList.Split(',');
-                foreach (var item in categoryList)
+                foreach (var categoryId in viewModel.CategoriesList)
                 {
-                    var bookCategory = new BookCategory(book.BookId, int.Parse(item));
+                    var bookCategory = new BookCategory(book.BookId, categoryId);
                     _bookCategoryRepository.Insert(bookCategory);
                 }
             } 
@@ -111,7 +110,7 @@ namespace BibliotecaVirtual.Application.Services
                 ModelError = string.Format(Criticas.Ja_Existe_0, "outro Livro com este título.");
                 return viewModel;
             }
-            else if (string.IsNullOrEmpty(viewModel.CategoriesList) == true)
+            else if (viewModel.CategoriesList.Count == 0)
             {
                 ModelError = "Nenhum gênero informado para o livro.";
                 return viewModel;
@@ -128,22 +127,14 @@ namespace BibliotecaVirtual.Application.Services
 
             #region Inserindo categorias
 
-            if (string.IsNullOrEmpty(viewModel.CategoriesList) == false)
-            {
-                var categoryList = viewModel.CategoriesList.Split(',');
-                foreach (var item in categoryList)
-                {                    
-                    var bookCategory = new BookCategory(book.BookId, int.Parse(item));
+            _bookCategoryRepository.Delete(p => p.BookId == book.BookId);
 
-                    if (await _bookCategoryRepository.Exists(p => p.BookId == bookCategory.BookId &&
-                                                           p.CategoryId == bookCategory.CategoryId) == false)
-                    {
-                        _bookCategoryRepository.Insert(bookCategory);
-                    }
-                    else
-                    {
-                        _bookCategoryRepository.Update(bookCategory);
-                    }
+            if (viewModel.CategoriesList.Count > 0)
+            {
+                foreach (var categoryId in viewModel.CategoriesList)
+                {                    
+                    var bookCategory = new BookCategory(book.BookId, categoryId);
+                    _bookCategoryRepository.Insert(bookCategory);
                 }
             }
 
@@ -214,12 +205,7 @@ namespace BibliotecaVirtual.Application.Services
             //Criando uma lista de categorias separadas por virgula para levar até a view.
             foreach (var category in categories)
             {
-                if (string.IsNullOrEmpty(viewModel.CategoriesList) == false)
-                {
-                    viewModel.CategoriesList += ",";
-                }
-
-                viewModel.CategoriesList += category.CategoryId.ToString();
+                viewModel.CategoriesList.Add(category.CategoryId);
             }
 
             //Convertendo a imagem de  byte[] para string.

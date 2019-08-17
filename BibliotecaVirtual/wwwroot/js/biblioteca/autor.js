@@ -13,6 +13,7 @@ function autor()
                 selectAuthor: [],
                 isEmpty: this.selectPublisher.length == 0,
                 selectedValue: -1,
+                loadedValue: -1,
             },
             methods: {
                 obterOpcoes: function ()
@@ -36,13 +37,15 @@ function autor()
                 atualizarLista: function (data)
                 {
                     this.selectAuthor = data;
+                    this.selectedValue = this.loadedValue;
                     this.$forceUpdate();
                 },
                 setSelectedValue: function (value)
                 {
-                    if (value)
+                    if (value && parseInt(value))
                     {
-                        this.selectedValue = value;
+                        
+                        this.loadedValue = value;
                     }
                 },
                 getAuthorId: function (item)

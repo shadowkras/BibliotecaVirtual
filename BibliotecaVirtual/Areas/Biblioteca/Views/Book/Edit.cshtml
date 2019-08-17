@@ -75,7 +75,7 @@
                 <div class="col-sm-12 col-md-6 form-group">
                     <label class="label" asp-for="@Model.AuthorId"></label>
                     <select id="selectAuthor" asp-for="@Model.AuthorId" class="form-control"
-                            v-model="selectedValue" v-bind:onload="setSelectedValue('@(@Model.AuthorId)')">
+                            v-model="selectedValue" v-bind:load="setSelectedValue('@(@Model.AuthorId)')">
                         <option value="-1">
                             Selecione o(a) autor(a) do livro.
                         </option>
@@ -101,7 +101,7 @@
                 <div class="col-sm-12 col-md-6 form-group">
                     <label class="label" asp-for="@Model.PublisherId"></label>
                     <select id="selectPublisher" asp-for="@Model.PublisherId" class="form-control"
-                            v-model="selectedValue" v-bind:onload="setSelectedValue('@(@Model.PublisherId)')">
+                            v-model="selectedValue" v-bind:load="setSelectedValue('@(@Model.PublisherId)')">
                         <option value="-1">
                             Selecione a editora do livro.
                         </option>
@@ -127,8 +127,20 @@
                 <div class="col-sm-12 col-md-12 row form-group no-margin no-padding">
                     <div class="col-sm-12 col-md-6">
                         <label class="label" asp-for="@Model.CategoriesList"></label>
-                        <select id="selectCategory" asp-for="@Model.CategoriesList" class="form-control" multiple
-                                v-model="selectedValues" v-bind:onload="setSelectedValues('@(@Model.CategoriesList)')">
+                        @{ 
+                            string itemsCategorias = "";
+                            foreach(var item in Model.CategoriesList)
+                            {
+                                if(string.IsNullOrEmpty(itemsCategorias) == false)
+                                {
+                                    itemsCategorias += ",";
+                                }
+
+                                itemsCategorias += item.ToString();
+                            }
+                        }
+                        <select id="selectCategory"  asp-for="@Model.CategoriesList" class="form-control" multiple                                
+                                v-model="selectedValues" v-bind:load="setSelectedValues('@(itemsCategorias)')">
                             <option class="carregando" value="-1">
                                 Carregando. Aguarde um momento.
                             </option>
@@ -149,7 +161,7 @@
                     </div>
                     <div class="col-sm-12 col-md-6">
                         <label class="label" asp-for="@Model.CoverImageBase64"></label>
-                        <input asp-for="@Model.CoverImageBase64" class="form-control img-output" readonly />
+                        <input asp-for="@Model.CoverImageBase64" class="form-control img-output hide-input" readonly />
                         <span asp-validation-for="@Model.CoverImageBase64" class="text-danger"></span>
                         @await Component.InvokeAsync(typeof(ImagemDropzoneViewComponent), new { extensoesImagensAceitas = "*" })
                     </div>

@@ -29,11 +29,3 @@ else
     <script src="~/js/bundles/biblioteca.min.js" asp-append-version="true"></script>
 }
 <partial name="_ValidationScriptsPartial" />
-<script>
-    if ('serviceWorker' in navigator)
-    {
-        navigator.serviceWorker
-            .register('/js/serviceworker.js')
-            .then(function () { console.log('Service Worker Registered'); });
-    }
-</script>

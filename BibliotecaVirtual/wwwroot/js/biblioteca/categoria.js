@@ -7,31 +7,16 @@ function categoria()
 {
     if ($('#selectCategory').length)
     {
-        $('#selectPublisher').change(function ()
-        {
-            debugger;
-            if (e.target.options.selectedIndex > -1)
-            {
-                let arr = []
-                let data = e.target.options[e.target.options.selectedIndex].value;
-                categoria.vueSelect.selectedValues.push(data)
-
-                arr = categoria.vueSelect.selectedValues.filter(value => value !== data)
-
-                console.log(arr)
-            }
-        });
-
         categoria.vueSelect = new Vue({
             el: '#selectCategory',
             data: {
                 selectCategory: [],
                 selectedValues: [],
-                loaded: false,
+                loadedValue: [],
             },
             methods: {
                 obterOpcoes: function ()
-                {                    
+                {
                     var endereco = site.url + 'biblioteca/category/getcategories';
                     let parametros = {
                     };
@@ -51,7 +36,7 @@ function categoria()
                 atualizarLista: function (data)
                 {
                     this.selectCategory = data;
-                    this.loaded = true;
+                    this.selectedValues = this.loadedValue;
                     this.$forceUpdate();
                 },
                 isEmpty: function ()
@@ -60,17 +45,20 @@ function categoria()
                 },
                 setSelectedValues: function (value)
                 {
-                    if (loaded == false && typeof value === 'string' || value instanceof String)
+                    if (value)
                     {
-                        if (value.search(',') !== -1)
+                        if (typeof value === 'string' || value instanceof String)
                         {
-                            var values = value.split(',');
-                            this.selectedValues = values;
-                        }
-                        else
-                        {
-                            var values = [value];
-                            this.selectedValues = values;
+                            if (value.search(',') !== -1)
+                            {
+                                var values = value.split(',');
+                                this.loadedValue = values;
+                            }
+                            else
+                            {
+                                var values = [value];
+                                this.loadedValue = values;
+                            }
                         }
                     }
                 },

@@ -59,7 +59,7 @@ namespace BibliotecaVirtual.Application.ViewModels
         public ICollection<BookCategoryViewModel> Categories { get; set; }
 
         [Display(Name = "Gêneros")]
-        public string CategoriesList { get; set; }
+        public List<int> CategoriesList { get; set; } = new List<int>();
 
         [Display(Name = "Autor")]
         [JsonIgnore]
