@@ -55,10 +55,9 @@ namespace BibliotecaVirtual.Application.Services
         /// <summary>
         /// Obtém uma lista com os livros cadastrados.
         /// </summary>
-        /// <param name="title">Filtro de pesquisa pelo titulo do livro.</param>
-        /// <param name="author">Filtro de pesquisa pelo autor do livro.</param>
+        /// <param name="filtro">Filtro de pesquisa pelo titulo ou autor do livro.</param>
         /// <returns></returns>
-        Task<IEnumerable<BookViewModel>> ObtainBooks(string title, string author);
+        Task<IEnumerable<BookViewModel>> ObtainBooks(string filtro);
 
         /// <summary>
         /// Obtém um livro a partir do seu identificador.

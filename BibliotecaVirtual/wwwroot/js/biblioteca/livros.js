@@ -11,16 +11,14 @@ function livros()
             el: '#gradeLivros',
             data: {
                 gradeLivros: [],
-                filtroTitulo: '',
-                filtroAutor: '',
+                filtroPesquisa: '',
             },
             methods: {
                 obterLivros: function ()
                 {
                     var endereco = site.url + 'biblioteca/book/getbooks';
                     let parametros = {
-                        title: this.filtroTitulo,
-                        author: this.filtroAutor,
+                        filter: this.filtroPesquisa,
                     };
 
                     $.get(endereco, parametros)

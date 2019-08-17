@@ -34,14 +34,14 @@ namespace BibliotecaVirtual.Areas.Biblioteca.Controllers
 
         #endregion
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View(nameof(Index), null);
         }
 
-        public async Task<IActionResult> GetBooks(string title, string author)
+        public async Task<IActionResult> GetBooks(string filter)
         {
-            var books = await _bookService.ObtainBooks(title, author);
+            var books = await _bookService.ObtainBooks(filter);
             return Json(books);
         }
 

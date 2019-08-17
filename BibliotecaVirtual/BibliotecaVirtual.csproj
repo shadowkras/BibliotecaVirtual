@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <None Include="Areas\Identity\Pages\_ViewStart.cshtml" />
-    <None Include="wwwroot\lib\fontawesome\6f801221e2.js" />
     <None Include="wwwroot\lib\popper\popper.js" />
     <None Include="wwwroot\lib\popper\popper.min.js" />
     <None Include="wwwroot\lib\vue\vue.js" />

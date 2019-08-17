@@ -1,12 +1,10 @@
-﻿using BibliotecaVirtual.Application.Extensions;
-using BibliotecaVirtual.Application.Resources;
+﻿using BibliotecaVirtual.Application.Resources;
 using BibliotecaVirtual.Application.ViewModels;
 using BibliotecaVirtual.Data.Entities;
 using BibliotecaVirtual.Data.Extensions;
 using BibliotecaVirtual.Data.Repositories;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Linq;
 using System.Threading.Tasks;
 using System;
 
@@ -195,38 +193,18 @@ namespace BibliotecaVirtual.Application.Services
         /// <summary>
         /// Obtém uma lista com os livros cadastrados.
         /// </summary>
-        /// <param name="title">Filtro de pesquisa pelo titulo do livro.</param>
-        /// <param name="author">Filtro de pesquisa pelo autor do livro.</param>
+        /// <param name="filtro">Filtro de pesquisa pelo titulo ou autor do livro.</param>
         /// <returns></returns>
-        public async Task<IEnumerable<BookViewModel>> ObtainBooks(string title, string author)
+        public async Task<IEnumerable<BookViewModel>> ObtainBooks(string filtro)
         {
             #region Predicados com os filtros de pesquisa
 
             Expression<Func<Book, bool>> predicate = null;
-            Expression<Func<Book, bool>> predicateTitle = null;
-            Expression<Func<Book, bool>> predicateAuthor = null;
 
-            if (string.IsNullOrEmpty(title) == false)
+            if (string.IsNullOrEmpty(filtro) == false)
             {
-                predicateTitle = p => p.Title.Contains(title);
-            }
-            if (string.IsNullOrEmpty(author) == false)
-            {
-                predicateAuthor = p => p.Author.Name.Contains(author);
-            }
-
-            if (predicateTitle != null && predicateAuthor == null)
-            {
-                predicate = predicateTitle;
-            }
-            else if (predicateTitle == null && predicateAuthor != null)
-            {
-                predicate = predicateAuthor;
-            }
-            else if (predicateTitle != null && predicateAuthor != null)
-            {
-                predicate = predicateTitle.Or(predicateAuthor);
-            } 
+                predicate = p => p.Title.Contains(filtro) || p.Author.Name.Contains(filtro);
+            }            
 
             #endregion
 
