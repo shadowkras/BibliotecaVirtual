@@ -35,7 +35,7 @@ namespace BibliotecaVirtualTest
         public void Get_WhenCalled_ReturnsAllItems()
         {
             // Act
-            var okResult = _controller.Index().Result as OkObjectResult;
+            var okResult = _controller.Index() as OkObjectResult;
 
             // Assert
             var items = Assert.IsType<List<BookViewModel>>(okResult.Value);

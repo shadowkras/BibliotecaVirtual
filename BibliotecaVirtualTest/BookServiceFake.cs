@@ -93,5 +93,10 @@ namespace BibliotecaVirtualTest
                                                                     a.Author.Name.Contains(author)));
             return existing;
         }
+
+        public Task<IEnumerable<BookViewModel>> ObtainBooks(string filtro)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
